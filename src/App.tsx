@@ -1,26 +1,17 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
+import Stations from "./components/Stations";
+import 'bootstrap/dist/css/bootstrap.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [tagVisibilities, setTagVisibilities] = useState([false, false, false])
+    return (
+        <div className="App container">
+            <h3>RoomHelper 3000</h3>
+            <Stations tagVisibilities={tagVisibilities}/>
+            <button className='btn btn-primary' onClick={() => setTagVisibilities([true, true, true])}>Show all</button>
+        </div>
+    );
 }
 
 export default App;
