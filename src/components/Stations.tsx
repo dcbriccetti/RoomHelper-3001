@@ -19,7 +19,7 @@ export default function Stations({tagVisibilities}: Props) {
         <div className='stations'>
             {
                 Array.from({length: rows * cols}).map((_, i) =>
-                    <Station key={i} stationName={stationName(i)} ip={''} tagVisibilities={tagVisibilities}/>
+                    <Station key={i} stationName={stationName(i)} ip={'10.1.1.' + (i + 1)} tagVisibilities={tagVisibilities} studentFirstName={'Dave'} studentLastName={'Briccetti'}/>
                 )
             }
         </div>

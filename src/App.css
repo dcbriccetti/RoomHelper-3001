@@ -20,12 +20,46 @@
     font-size: small;
     font-weight: bold;
     position: relative;
-    top: -5px; /* why is this needed? */
+}
+
+.status-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .status-tag {
+    display: inline-block;
+    width: 32%;
+    text-align: center;
     padding: 1px;
     margin-right: 1px;
     color: white;
     font-weight: bold;
+}
+
+.station-top-line {
+    top: -5px; /* why is this needed? */
+    font-size: small;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;  /* To ensure both texts are aligned to the top */
+}
+
+.left-text, .right-text {
+    margin: 0;  /* Removes default margins to make text flush */
+}
+
+.station-student-first-name {
+    font-size: large;
+    font-weight: bold;
+}
+
+.station-student-last-name {
+}
+
+.station-student-first-name, .station-student-last-name {
+    width: 100%;
+    text-align: center;
 }
