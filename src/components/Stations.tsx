@@ -1,28 +1,67 @@
 import Station from "./Station";
+import {StationData} from "../StationData";
+import React, {useEffect, useState} from "react";
 
 interface Props {
-    tagVisibilities: boolean[]
-    numRows: number
-    numCols: number
+    sds: StationData[]
 }
 
-export default function Stations({tagVisibilities, numRows, numCols}: Props) {
+export default function Stations({sds}: Props) {
 
     function stationName(index: number) {
-        const rowFrom0 = Math.floor(index / numCols);
-        const colFrom0 = index % numCols;
-        return String.fromCharCode('A'.charCodeAt(0) + rowFrom0) + (colFrom0 + 1);
+        return '' + (index + 1)
     }
 
-    const style = {
-        gridTemplateColumns: `repeat(${numCols}, 1fr)`,
-        gridTemplateRows: `repeat(${numRows}, 1fr)`,
-    };
+    function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
+        e.preventDefault()
+    }
+
+    function handleDrop(e: React.DragEvent<HTMLDivElement>) {
+        e.preventDefault()
+        const stationName = e.dataTransfer.getData('text/plain')
+        const index = parseInt(stationName) - 1
+        // Retrieve the offsets from the dataTransfer object
+        const offsetX = parseFloat(e.dataTransfer.getData('offsetX'));
+        const offsetY = parseFloat(e.dataTransfer.getData('offsetY'));
+
+        // Get the bounding rectangle of the parent container
+        const rect = e.currentTarget.getBoundingClientRect();
+        // Adjust the position using the offsets
+        const newCoords = {
+            x: e.clientX - rect.left - offsetX,
+            y: e.clientY - rect.top - offsetY,
+        };
+
+        // update the specific item in the stationData array
+        const updatedData = [...stationData];
+        updatedData[index] = {
+            ...updatedData[index],
+            x: newCoords.x,
+            y: newCoords.y,
+        };
+
+        setStationData(updatedData);
+    }
+
+    const [stationData, setStationData] = useState(sds);
+    useEffect(() => {
+        setStationData(sds);
+    }, [sds]);
+
     return (
-        <div style={style} className='stations'>
+        <div className='stations' onDragOver={handleDragOver} onDrop={handleDrop}>
             {
-                Array.from({length: numRows * numCols}).map((_, i) =>
-                    <Station key={i} stationName={stationName(i)} ip={'10.1.1.' + (i + 1)} tagVisibilities={tagVisibilities} studentFirstName={'Dave'} studentLastName={'Briccetti'}/>
+                stationData.map((sd, i) => {
+                        return <Station
+                            key={i}
+                            x={sd.x}
+                            y={sd.y}
+                            stationName={stationName(i)}
+                            ip={sd.ip}
+                            tagVisibilities={sd.tagVisibilities}
+                            studentFirstName={sd.studentFirstName}
+                            studentLastName={sd.studentLastName}/>;
+                    }
                 )
             }
         </div>

@@ -2,15 +2,39 @@ import StatusTags from "./StatusTags";
 
 interface Props {
     stationName: string
+    x: number
+    y: number
     studentFirstName: string
     studentLastName: string
     ip: string
     tagVisibilities: boolean[]
 }
 
-export default function Station({stationName, studentFirstName, studentLastName, ip, tagVisibilities}: Props) {
+export default function Station({stationName, x, y, studentFirstName, studentLastName, ip, tagVisibilities}: Props) {
+
+    function handleDragStart(e: React.DragEvent<HTMLDivElement>) {
+        e.dataTransfer.setData('text/plain', stationName)
+        // Capture and store the offset within the dragged item where the drag started
+        const offsetX = e.clientX - e.currentTarget.getBoundingClientRect().left;
+        const offsetY = e.clientY - e.currentTarget.getBoundingClientRect().top;
+
+        e.dataTransfer.setData('offsetX', `${offsetX}`);
+        e.dataTransfer.setData('offsetY', `${offsetY}`);
+        e.currentTarget.style.cursor = 'grabbing';
+    }
+
+    function handleDragEnd(e: React.DragEvent<HTMLDivElement>) {
+        e.currentTarget.style.cursor = 'grab';
+    }
+
+    const style = {
+        left: `${x}px`,
+        top: `${y}px`
+    }
+
     return (
-        <div className='station'>
+        <div className='station' style={style} draggable={true}
+             onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
             <div className="station-top-line">
                 <span className='station-name left-text'>{stationName}</span>
                 <span className='right-text'>{ip}</span>
