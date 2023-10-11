@@ -8,7 +8,7 @@ function App() {
     return (
         <div className="App container">
             <h3>RoomHelper 3000</h3>
-            <Stations tagVisibilities={tagVisibilities}/>
+            <Stations tagVisibilities={tagVisibilities} numCols={7} numRows={3}/>
             <button className='btn btn-primary' onClick={() => setTagVisibilities([true, true, true])}>Show all</button>
         </div>
     );
