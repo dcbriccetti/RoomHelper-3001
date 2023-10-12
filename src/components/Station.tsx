@@ -13,13 +13,14 @@ interface Props {
 export default function Station({stationName, x, y, studentFirstName, studentLastName, ip, tagVisibilities}: Props) {
 
     function handleDragStart(e: React.DragEvent<HTMLDivElement>) {
-        e.dataTransfer.setData('text/plain', stationName)
-        // Capture and store the offset within the dragged item where the drag started
-        const offsetX = e.clientX - e.currentTarget.getBoundingClientRect().left;
-        const offsetY = e.clientY - e.currentTarget.getBoundingClientRect().top;
+        const {left, top} = e.currentTarget.getBoundingClientRect()
+        const dragData = {
+            stationName: stationName,
+            offsetX: e.clientX - left,
+            offsetY: e.clientY - top
+        };
 
-        e.dataTransfer.setData('offsetX', `${offsetX}`);
-        e.dataTransfer.setData('offsetY', `${offsetY}`);
+        e.dataTransfer.setData('text/plain', JSON.stringify(dragData));
         e.currentTarget.style.cursor = 'grabbing';
     }
 

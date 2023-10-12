@@ -18,10 +18,9 @@ export default function Room(props: Props) {
 
     function handleDrop(e: React.DragEvent<HTMLDivElement>) {
         e.preventDefault()
-        const stationName = e.dataTransfer.getData('text/plain')
+        const droppedData = JSON.parse(e.dataTransfer.getData('text/plain'));
+        const { stationName, offsetX, offsetY } = droppedData;
         const index = parseInt(stationName) - 1
-        const offsetX = parseFloat(e.dataTransfer.getData('offsetX'))
-        const offsetY = parseFloat(e.dataTransfer.getData('offsetY'))
         const rect: DOMRect = e.currentTarget.getBoundingClientRect()
         // update the specific item in the stationData array
         const updatedStationModels = [...stationModels]
