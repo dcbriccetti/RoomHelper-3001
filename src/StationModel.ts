@@ -1,8 +1,8 @@
-export interface StationData {
+export interface StationModel {
     index: number
     ip: string
-    studentFirstName: string
-    studentLastName: string
+    firstName: string
+    lastName: string
     x: number
     y: number
     tagVisibilities: boolean[]

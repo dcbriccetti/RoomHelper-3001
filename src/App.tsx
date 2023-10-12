@@ -1,17 +1,17 @@
 import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
-import {StationData} from "./StationData";
-import Stations from "./components/Stations";
+import {StationModel} from "./StationModel";
+import Room from "./components/Room";
 
-function App() {
+export default function App() {
     const [tagVisibilities, setTagVisibilities] = useState([false, false, false])
 
-    const stationData: StationData[] = Array.from({length: 5}).map((_, i) => ({
+    const stationData: StationModel[] = Array.from({length: 5}).map((_, i) => ({
         index: i,
         ip: '10.0.0.' + (i + 1),
-        studentFirstName: 'Dave',
-        studentLastName: 'Briccetti',
+        firstName: 'Dave',
+        lastName: 'Briccetti',
         x: i * 50,
         y: 0,
         tagVisibilities: [...tagVisibilities], // Spread to create a new array copy
@@ -20,12 +20,10 @@ function App() {
     return (
         <div className="App container">
             <h3>RoomHelper 3000</h3>
-            <Stations sds={stationData}/>
+            <Room stationModels={stationData}/>
             <button className='btn btn-primary' onClick={() => {
                 setTagVisibilities([true, true, true]);
-            }}>Show all</button>
+            }}>Show Tags</button>
         </div>
     );
 }
-
-export default App;
