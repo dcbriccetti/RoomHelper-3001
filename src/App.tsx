@@ -3,6 +3,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import {StationModel} from "./StationModel";
 import Room from "./components/Room";
+import NameInput from "./components/NameInput";
+import Tabs from "./components/Tabs";
 
 export default function App() {
     const [tagVisibilities, setTagVisibilities] = useState([false, false, false])
@@ -21,9 +23,11 @@ export default function App() {
         <div className="App container">
             <h3>RoomHelper 3000</h3>
             <Room stationModels={stationData}/>
-            <button className='btn btn-primary' onClick={() => {
-                setTagVisibilities([true, true, true]);
-            }}>Show Tags</button>
+            <NameInput/>
+            <Tabs/>
+            <p/>
+            <p style={{fontSize: '70%'}}><a href="https://davebsoft.com">Dave Briccetti Software LLC</a></p>
+            <br/>
         </div>
     );
 }
