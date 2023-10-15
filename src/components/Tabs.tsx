@@ -1,55 +1,86 @@
-import React, {useState} from "react";
+import React, {ReactNode} from "react";
 import Seating from "./Seating";
 import Calling from "./Calling";
 import Contact from "./Contact";
 import Control from "./Control";
 import Poll from "./Poll";
 
-export default function Tabs() {
-    const [activeTab, setActiveTab] = useState("seating")
+const tabs = [
+    {id: 'seating', label: 'Seating', content: <Seating />},
+    {id: 'calling', label: 'Calling', content: <Calling />},
+    {id: 'contact', label: 'Contact', content: <Contact />},
+    {id: 'control', label: 'Control', content: <Control />},
+    {id: 'poll', label: 'Poll', content: <Poll />}
+];
+
+interface TabProps {
+    id: string;
+    label: string;
+    isActive: boolean;
+}
+
+interface TabProps {
+    id: string;
+    label: string;
+    isActive: boolean;
+    onClick: () => void;  // Add this line
+}
+
+const Tab: React.FC<TabProps> = ({ id, label, isActive, onClick }) => (
+    <li className="nav-item">
+        <a className={`nav-link ${isActive ? 'active' : ''}`}
+           id={`${id}-tab`}
+           href={`#${id}`}  // This line remains but won't navigate due to the onClick handler
+           role="tab"
+           aria-controls={id}
+           aria-selected={isActive}
+           onClick={(e) => {
+               e.preventDefault();  // Prevent the default navigation
+               onClick();
+           }}
+        >
+            {label}
+        </a>
+    </li>
+);
+
+interface TabContentProps {
+    id: string;
+    content: ReactNode
+    isActive: boolean;
+}
+const TabContent = ({id, content, isActive}: TabContentProps) => (
+    <div className={`tab-pane ${isActive ? 'show active' : ''}`}
+         id={id}
+         role="tabpanel"
+         aria-labelledby={`${id}-tab`}>
+        {content}
+    </div>
+);
+
+const TabsComponent: React.FC = () => {
+    const [activeTab, setActiveTab] = React.useState(tabs[0].id);  // default to the first tab
 
     return (
         <div>
             <ul className="nav nav-tabs" role="tablist">
-                <li className="nav-item">
-                    <a className="nav-link active" id="seating-tab" data-toggle="tab" href="#seating" role="tab"
-                       aria-controls="seating" aria-selected="true">Seating</a>
-                </li>
-                <li className="nav-item">
-                    <a className="nav-link" id="calling-tab" data-toggle="tab" href="#calling" role="tab"
-                       aria-controls="calling" aria-selected="false">Calling</a>
-                </li>
-                <li className="nav-item">
-                    <a className="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
-                       aria-controls="contact" aria-selected="false">Contact</a>
-                </li>
-                <li className="nav-item">
-                    <a className="nav-link" id="control-tab" data-toggle="tab" href="#control" role="tab"
-                       aria-controls="control" aria-selected="false">Control</a>
-                </li>
-                <li className="nav-item">
-                    <a className="nav-link" id="poll-tab" data-toggle="tab" href="#poll" role="tab" aria-controls="poll"
-                       aria-selected="false">Poll</a>
-                </li>
+                {tabs.map(tab => (
+                    <Tab
+                        key={tab.id}
+                        {...tab}
+                        isActive={tab.id === activeTab}
+                        onClick={() => setActiveTab(tab.id)}  // Set the active tab on click
+                    />
+                ))}
             </ul>
 
             <div className="tab-content">
-                <div className="tab-pane show active" id="seating" role="tabpanel" aria-labelledby="seating-tab">
-                    <Seating/>
-                </div>
-                <div className="tab-pane" id="calling" role="tabpanel" aria-labelledby="calling-tab">
-                    <Calling/>
-                </div>
-                <div className="tab-pane" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                    <Contact/>
-                </div>
-                <div className="tab-pane" id="control" role="tabpanel" aria-labelledby="control-tab">
-                    <Control/>
-                </div>
-                <div className="tab-pane" id="poll" role="tabpanel" aria-labelledby="poll-tab">
-                    <Poll/>
-                </div>
+                {tabs.map(tab => (
+                    <TabContent key={tab.id} {...tab} isActive={tab.id === activeTab} />
+                ))}
             </div>
         </div>
-    )
-}
+    );
+};
+
+export default TabsComponent;

@@ -3,7 +3,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import {StationModel} from "./StationModel";
 import Room from "./components/Room";
-import NameInput from "./components/NameInput";
 import Tabs from "./components/Tabs";
 
 export default function App() {
@@ -23,7 +22,6 @@ export default function App() {
         <div className="App container">
             <h3>RoomHelper 3000</h3>
             <Room stationModels={stationData}/>
-            <NameInput/>
             <Tabs/>
             <p/>
             <p style={{fontSize: '70%'}}><a href="https://davebsoft.com">Dave Briccetti Software LLC</a></p>
