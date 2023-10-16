@@ -1,3 +1,11 @@
+.thin-margin {
+    margin: 5px;
+}
+
+.active-link {
+    font-weight: bold;
+}
+
 .stations {
     position: relative;
     width: 100%;

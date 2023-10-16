@@ -22,6 +22,7 @@ export default function App() {
 
     if (!socketRef.current) {
         socketRef.current = socketIOClient(ENDPOINT);
+        console.log("Socket initialized:", socketRef.current);
 
         // Handle connection errors
         socketRef.current.on('connect_error', (err) => {
@@ -37,17 +38,18 @@ export default function App() {
 
     useEffect(() => {
         return () => {
-            socketRef.current?.disconnect();
+            // todo find out why this causes undefined socket
+            //   socketRef.current?.disconnect();
         };
     }, []);
 
     return (
         <SocketContext.Provider value={socketRef.current}>
-            <div className="App">
+            <div className="App thin-margin">
                 {error && <div className="error-message">{error}</div>} {/* Optional: Display error messages */}
                 <Router>
-                    <NavLink to="/">Home</NavLink>&nbsp;
-                    <NavLink to="/seating">Seating</NavLink>
+                    <NavLink to="/" className={({ isActive }) => (isActive ? 'active-link' : '')}>Home</NavLink>&nbsp;
+                    <NavLink to="/seating" className={({ isActive }) => (isActive ? 'active-link' : '')}>Seating</NavLink>
                     <Routes>
                         <Route path="/" element={<MainPage/>}/>
                         <Route path="/seating" element={<Seating/>}/>

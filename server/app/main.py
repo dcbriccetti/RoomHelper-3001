@@ -18,7 +18,7 @@ from app.types import *
 names: list[str] = []
 stations: list[station_dict] = [{}] * settings['columns'] * settings['rows']
 teacher_password = 'ddd'  # Change this
-authenticated = False
+authenticated = True  # todo implement authentication?
 
 persister = Persister()
 
@@ -213,7 +213,6 @@ def set_names(message: dict) -> None:
         emit('set_names', message, broadcast=True, namespace=STUDENT_NS)
         global names
         names = []
-        assign_seats: bool = message['assignSeats']
 
         def skip_missing(start: int) -> int:
             new_si = start
@@ -224,12 +223,6 @@ def set_names(message: dict) -> None:
         si = skip_missing(0)
         for name in message['names']:
             names.append(name)
-            if assign_seats:
-                station = {'ip': ip, 'name': name, 'connected': True}
-                stations[si] = station
-                broadcast_seated(station, si)
-                si = skip_missing(si + 1)
-
 
 @socketio.on('seat', namespace=STUDENT_NS)
 def seat(message: dict):
