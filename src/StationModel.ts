@@ -5,5 +5,4 @@ export interface StationModel {
     lastName: string
     x: number
     y: number
-    tagVisibilities: boolean[]
 }

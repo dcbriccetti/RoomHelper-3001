@@ -1,13 +1,18 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {BrowserRouter as Router, NavLink, Route, Routes} from 'react-router-dom';
-import { Socket } from 'socket.io-client';
+import socketIOClient, {Socket} from "socket.io-client";
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import {StationModel} from "./StationModel";
-import Room from "./components/Room";
-import Tabs from "./components/Tabs";
-import socketIOClient from "socket.io-client";
+import Seating from "./components/Seating";
+import Calling from "./components/Calling";
+import Contact from "./components/Contact";
+import Control from "./components/Control";
 import Poll from "./components/Poll";
+import Room from './components/Room';
+
+let HOSTNAME = "http://127.0.0.1:5000";
+const ENDPOINT = HOSTNAME + "/teacher";
 
 const SocketContext = React.createContext<Socket | null>(null);
 
@@ -16,21 +21,25 @@ export function useSocket() {
 }
 
 export default function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/room" element={<Poll />} />
-      </Routes>
-    </Router>
-  );
+    const socket = socketIOClient(ENDPOINT);
+    return (
+        <SocketContext.Provider value={socket}>
+            <div className="App">
+                <Router>
+                    <NavLink to="/">Home</NavLink>&nbsp;
+                    <NavLink to="/seating">Seating</NavLink>
+                    <Routes>
+                        <Route path="/" element={<MainPage/>}/>
+                        <Route path="/seating" element={<Seating/>}/>
+                    </Routes>
+                </Router>
+            </div>
+        </SocketContext.Provider>
+    );
 }
 
 function MainPage() {
-    const [tagVisibilities, setTagVisibilities] = useState([false, false, false])
     const [studentNames, setStudentNames] = useState([''])
-    let HOSTNAME = "http://127.0.0.1:5000";
-    const ENDPOINT = HOSTNAME + "/teacher";
 
     useEffect(() => {
         fetch(HOSTNAME + '/students')
@@ -49,16 +58,8 @@ function MainPage() {
             });
     }, [HOSTNAME]);
 
-    const socket = socketIOClient(ENDPOINT);
-    socket.on("message", (data: string) => {
-      console.log(data);
-    });
-
-    // Send a message to the server after connecting
-    socket.emit("message", "Hello from React!");
 
     const stationData: StationModel[] = studentNames.map((name, i) => {
-        // split name into firstName and lastName
         const [firstName, lastName] = name.split(' ');
         return ({
             index: i,
@@ -66,22 +67,19 @@ function MainPage() {
             firstName: firstName,
             lastName: lastName,
             x: i * 50,
-            y: 0,
-            tagVisibilities: [...tagVisibilities], // Spread to create a new array copy
+            y: 24 // todo find better way to position these below the Teacher View checkbox
         });
     })
 
     return (
-        <SocketContext.Provider value={socket}>
-            <NavLink to="/room">Room</NavLink>
-            <div className="App container">
-            <h3>RoomHelper 3001</h3>
-            <Room stationModels={stationData}/>
-            <Tabs/>
-            <p/>
-            <p style={{fontSize: '70%'}}><a href="https://davebsoft.com">Dave Briccetti Software LLC</a></p>
-            <br/>
+        <div>
+            <div>
+                <h3>RoomHelper 3001</h3>
+                <Room stationModels={stationData}/>
+                <p/>
+                <p style={{fontSize: '70%'}}><a href="https://davebsoft.com">Dave Briccetti Software LLC</a></p>
+                <br/>
+            </div>
         </div>
-        </SocketContext.Provider>
     );
 }

@@ -7,10 +7,9 @@ interface Props {
     studentFirstName: string
     studentLastName: string
     ip: string
-    tagVisibilities: boolean[]
 }
 
-export default function Station({stationName, x, y, studentFirstName, studentLastName, ip, tagVisibilities}: Props) {
+export default function Station({stationName, x, y, studentFirstName, studentLastName, ip}: Props) {
 
     function handleDragStart(e: React.DragEvent<HTMLDivElement>) {
         const {left, top} = e.currentTarget.getBoundingClientRect()
@@ -42,7 +41,6 @@ export default function Station({stationName, x, y, studentFirstName, studentLas
             </div>
             <div className='station-student-first-name'>{studentFirstName}</div>
             <div className='station-student-last-name'>{studentLastName}</div>
-            <StatusTags visibilities={tagVisibilities}/>
         </div>
     )
 }

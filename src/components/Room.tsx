@@ -20,7 +20,7 @@ export default function Room(props: Props) {
     function handleDrop(e: React.DragEvent<HTMLDivElement>) {
         e.preventDefault()
         const droppedData = JSON.parse(e.dataTransfer.getData('text/plain'));
-        const { stationName, offsetX, offsetY } = droppedData;
+        const {stationName, offsetX, offsetY} = droppedData;
         const index = parseInt(stationName) - 1
         const rect: DOMRect = e.currentTarget.getBoundingClientRect()
         // update the specific item in the stationData array
@@ -42,18 +42,23 @@ export default function Room(props: Props) {
 
     return (
         <div className='stations' onDragOver={handleDragOver} onDrop={handleDrop}>
-            {
-                stationModels.map((sm, i) => {
-                        return <Station
-                            key={i}
-                            x={sm.x} y={sm.y}
-                            stationName={stationName(i)}
-                            ip={sm.ip}
-                            tagVisibilities={sm.tagVisibilities}
-                            studentFirstName={sm.firstName} studentLastName={sm.lastName}/>
-                    }
-                )
-            }
+            <div>
+                <input id='teacher-view' type="checkbox" defaultChecked/>
+                <label htmlFor="teacher-view">Teacher View</label>
+            </div>
+            <div>
+                {
+                    stationModels.map((sm, i) => {
+                            return <Station
+                                key={i}
+                                x={sm.x} y={sm.y}
+                                stationName={stationName(i)}
+                                ip={sm.ip}
+                                studentFirstName={sm.firstName} studentLastName={sm.lastName}/>
+                        }
+                    )
+                }
+            </div>
         </div>
     );
 }
