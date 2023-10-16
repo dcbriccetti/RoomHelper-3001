@@ -319,12 +319,13 @@ def relay_chat(sender_id: int, raw_msg: str) -> None:
     'Relay chat message, escaping student messages and processing teacher messages with Markdown'
     sender: str = sender_from_id(sender_id)
     logger.info(f'Chat message from {sender} at {request.remote_addr}: {raw_msg}')
-    msg = raw_msg if sender_id == TEACHER_ID else escape(raw_msg) + '<br/>'
+    msg = raw_msg if sender_id == TEACHER_ID else escape(raw_msg)
     prefixed_msg = strftime('%H:%M:%S') + f' {sender} : {msg}'
-    html = markdown(prefixed_msg) if sender_id == TEACHER_ID else prefixed_msg
+    html = markdown(prefixed_msg)[3:-4] if sender_id == TEACHER_ID else prefixed_msg
+    # Remove starting and ending <p> and </p> tags if it was processed by markdown
     for ns in ALL_NS:
         if settings['chatEnabled'] or ns == TEACHER_NS:
-            emit('chat_msg', html, namespace=ns, broadcast=True)
+            emit('chat_msg', html + '<br/>', namespace=ns, broadcast=True)
 
 
 ioh.on_all_namespaces('chat_msg', relay_chat)

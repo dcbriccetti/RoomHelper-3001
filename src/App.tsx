@@ -9,6 +9,7 @@ import Room from './components/Room';
 import Control from "./components/Control";
 import Contact from "./components/Contact";
 import Calling from "./components/Calling";
+import Chat from "./components/Chat";
 
 let HOSTNAME = "http://127.0.0.1:5000";
 const ENDPOINT = HOSTNAME + "/teacher";
@@ -56,12 +57,14 @@ export default function App() {
                     <NavLink to="/control" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Control</NavLink>
                     <NavLink to="/contact" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Contact</NavLink>
                     <NavLink to="/calling" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Calling</NavLink>
+                    <NavLink to="/chat" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Chat</NavLink>
                     <Routes>
                         <Route path="/" element={<MainPage/>}/>
                         <Route path="/seating" element={<Seating/>}/>
                         <Route path="/control" element={<Control/>}/>
                         <Route path="/contact" element={<Contact/>}/>
                         <Route path="/calling" element={<Calling/>}/>
+                        <Route path="/chat" element={<Chat prefix='chat'/>}/>
                     </Routes>
                 </Router>
             </div>
