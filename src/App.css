@@ -91,3 +91,7 @@
     width: 5em;
     display: inline-block;
 }
+
+#calling button {
+    margin-right: 5px;
+}

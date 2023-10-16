@@ -7,6 +7,8 @@ import {StationModel} from "./StationModel";
 import Seating from "./components/Seating";
 import Room from './components/Room';
 import Control from "./components/Control";
+import Contact from "./components/Contact";
+import Calling from "./components/Calling";
 
 let HOSTNAME = "http://127.0.0.1:5000";
 const ENDPOINT = HOSTNAME + "/teacher";
@@ -19,7 +21,7 @@ export function useSocket() {
 
 export default function App() {
     const socketRef = useRef<Socket | null>(null);
-    const [error, setError] = useState<string | null>(null); // Optional: To store error messages
+    const [error, setError] = useState<string | null>(null);
 
     if (!socketRef.current) {
         socketRef.current = socketIOClient(ENDPOINT);
@@ -28,12 +30,12 @@ export default function App() {
         // Handle connection errors
         socketRef.current.on('connect_error', (err) => {
             console.error('Connection failed:', err);
-            setError('Failed to connect to the server.'); // Optionally set error state
+            setError('Failed to connect to the server.');
         });
 
         socketRef.current.on('disconnect', () => {
             console.log('Disconnected from server');
-            setError('Disconnected from the server.'); // Optionally set error state
+            setError('Disconnected from the server.');
         });
     }
 
@@ -52,10 +54,14 @@ export default function App() {
                     <NavLink to="/" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Home</NavLink>
                     <NavLink to="/seating" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Seating</NavLink>
                     <NavLink to="/control" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Control</NavLink>
+                    <NavLink to="/contact" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Contact</NavLink>
+                    <NavLink to="/calling" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Calling</NavLink>
                     <Routes>
                         <Route path="/" element={<MainPage/>}/>
                         <Route path="/seating" element={<Seating/>}/>
                         <Route path="/control" element={<Control/>}/>
+                        <Route path="/contact" element={<Contact/>}/>
+                        <Route path="/calling" element={<Calling/>}/>
                     </Routes>
                 </Router>
             </div>
