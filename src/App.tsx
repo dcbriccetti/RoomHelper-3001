@@ -1,14 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {BrowserRouter as Router, NavLink, Route, Routes} from 'react-router-dom';
 import socketIOClient, {Socket} from "socket.io-client";
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import {StationModel} from "./StationModel";
 import Seating from "./components/Seating";
-import Calling from "./components/Calling";
-import Contact from "./components/Contact";
-import Control from "./components/Control";
-import Poll from "./components/Poll";
 import Room from './components/Room';
 
 let HOSTNAME = "http://127.0.0.1:5000";
@@ -21,10 +17,34 @@ export function useSocket() {
 }
 
 export default function App() {
-    const socket = socketIOClient(ENDPOINT);
+    const socketRef = useRef<Socket | null>(null);
+    const [error, setError] = useState<string | null>(null); // Optional: To store error messages
+
+    if (!socketRef.current) {
+        socketRef.current = socketIOClient(ENDPOINT);
+
+        // Handle connection errors
+        socketRef.current.on('connect_error', (err) => {
+            console.error('Connection failed:', err);
+            setError('Failed to connect to the server.'); // Optionally set error state
+        });
+
+        socketRef.current.on('disconnect', () => {
+            console.log('Disconnected from server');
+            setError('Disconnected from the server.'); // Optionally set error state
+        });
+    }
+
+    useEffect(() => {
+        return () => {
+            socketRef.current?.disconnect();
+        };
+    }, []);
+
     return (
-        <SocketContext.Provider value={socket}>
+        <SocketContext.Provider value={socketRef.current}>
             <div className="App">
+                {error && <div className="error-message">{error}</div>} {/* Optional: Display error messages */}
                 <Router>
                     <NavLink to="/">Home</NavLink>&nbsp;
                     <NavLink to="/seating">Seating</NavLink>
@@ -56,8 +76,7 @@ function MainPage() {
             .catch((error) => {
                 console.error(error)
             });
-    }, [HOSTNAME]);
-
+    }, []);
 
     const stationData: StationModel[] = studentNames.map((name, i) => {
         const [firstName, lastName] = name.split(' ');
