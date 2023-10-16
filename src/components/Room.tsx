@@ -1,6 +1,7 @@
 import Station from "./Station"
 import {StationModel} from "../StationModel"
 import React, {useEffect, useState} from "react"
+import {useSocket} from "../App"
 
 interface Props {
     stationModels: StationModel[]
@@ -33,6 +34,7 @@ export default function Room(props: Props) {
         setStationModels(updatedStationModels)
     }
 
+    const socket = useSocket()
     const [stationModels, setStationModels] = useState(props.stationModels)
     useEffect(() => {
         setStationModels(props.stationModels)
