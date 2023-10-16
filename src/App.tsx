@@ -6,6 +6,7 @@ import './App.css';
 import {StationModel} from "./StationModel";
 import Seating from "./components/Seating";
 import Room from './components/Room';
+import Control from "./components/Control";
 
 let HOSTNAME = "http://127.0.0.1:5000";
 const ENDPOINT = HOSTNAME + "/teacher";
@@ -48,11 +49,13 @@ export default function App() {
             <div className="App thin-margin">
                 {error && <div className="error-message">{error}</div>} {/* Optional: Display error messages */}
                 <Router>
-                    <NavLink to="/" className={({ isActive }) => (isActive ? 'active-link' : '')}>Home</NavLink>&nbsp;
-                    <NavLink to="/seating" className={({ isActive }) => (isActive ? 'active-link' : '')}>Seating</NavLink>
+                    <NavLink to="/" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Home</NavLink>
+                    <NavLink to="/seating" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Seating</NavLink>
+                    <NavLink to="/control" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Control</NavLink>
                     <Routes>
                         <Route path="/" element={<MainPage/>}/>
                         <Route path="/seating" element={<Seating/>}/>
+                        <Route path="/control" element={<Control/>}/>
                     </Routes>
                 </Router>
             </div>
@@ -72,7 +75,6 @@ function MainPage() {
                 return response.json();
             })
             .then((data) => {
-                console.log(data);
                 setStudentNames(data);
             })
             .catch((error) => {

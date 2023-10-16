@@ -174,6 +174,7 @@ def enable_shares(enable: bool) -> None:
 
 @socketio.on('clear_chat', namespace=TEACHER_NS)
 def clear_chat() -> None:
+    print('clear_chat')
     if authenticated:
         for ns in ALL_NS:
             emit('clear_chat', broadcast=True, namespace=ns)

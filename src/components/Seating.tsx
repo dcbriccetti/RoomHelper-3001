@@ -1,23 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import { useSocket } from "../App";
 
 export default function Seating() {
     const [names, setNames] = useState<string>('');  // state for textarea content
     const socket = useSocket();
-
-    useEffect(() => {
-        socket?.on('connect', () => {
-            console.log('Socket connected:', socket.id);
-        });
-        socket?.on('disconnect', () => {
-            console.log('Socket disconnected');
-        });
-
-        return () => {
-            socket?.off('connect');
-            socket?.off('disconnect');
-        };
-    }, [socket]);
 
     function handleSetNames() {
         const unseatedNames = names.split('\n').filter(name => name.trim() !== '');
@@ -26,7 +12,9 @@ export default function Seating() {
     }
 
     return (
-        <div className="container">
+        <div>
+            <h1>Seating</h1>
+            <p>Enter student names below, one per line.</p>
             <textarea
                 id="names"
                 rows={8}
