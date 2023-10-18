@@ -10,6 +10,7 @@ import Control from "./components/Control";
 import Contact from "./components/Contact";
 import Calling from "./components/Calling";
 import Chat from "./components/Chat";
+import Poll from "./components/Poll";
 
 let HOSTNAME = "http://127.0.0.1:5000";
 const ENDPOINT = HOSTNAME + "/teacher";
@@ -25,16 +26,16 @@ export default function App() {
     const [error, setError] = useState<string | null>(null);
 
     if (!socketRef.current) {
-        socketRef.current = socketIOClient(ENDPOINT);
-        console.log("Socket initialized:", socketRef.current);
+        const s = socketRef.current = socketIOClient(ENDPOINT);
+        console.log("Socket initialized:", s);
 
         // Handle connection errors
-        socketRef.current.on('connect_error', (err) => {
+        s.on('connect_error', (err) => {
             console.error('Connection failed:', err);
             setError('Failed to connect to the server.');
         });
 
-        socketRef.current.on('disconnect', () => {
+        s.on('disconnect', () => {
             console.log('Disconnected from server');
             setError('Disconnected from the server.');
         });
@@ -47,24 +48,35 @@ export default function App() {
         };
     }, []);
 
+    const navLinksData = [
+        { path: "/", name: "Home", component: <MainPage /> },
+        { path: "/seating", name: "Seating", component: <Seating /> },
+        { path: "/control", name: "Control", component: <Control /> },
+        { path: "/contact", name: "Contact", component: <Contact /> },
+        { path: "/calling", name: "Calling", component: <Calling /> },
+        { path: "/chat",    name: "Chat",    component: <Chat prefix='chat' /> },
+        { path: "/poll",    name: "Poll",    component: <Poll /> },
+    ];
+
     return (
         <SocketContext.Provider value={socketRef.current}>
             <div className="App thin-margin">
                 {error && <div className="error-message">{error}</div>} {/* Optional: Display error messages */}
                 <Router>
-                    <NavLink to="/" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Home</NavLink>
-                    <NavLink to="/seating" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Seating</NavLink>
-                    <NavLink to="/control" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Control</NavLink>
-                    <NavLink to="/contact" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Contact</NavLink>
-                    <NavLink to="/calling" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Calling</NavLink>
-                    <NavLink to="/chat" className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}>Chat</NavLink>
+                    {navLinksData.map(link => (
+                        <NavLink
+                            key={link.path}
+                            to={link.path}
+                            className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}
+                        >
+                            {link.name}
+                        </NavLink>
+                    ))}
+
                     <Routes>
-                        <Route path="/" element={<MainPage/>}/>
-                        <Route path="/seating" element={<Seating/>}/>
-                        <Route path="/control" element={<Control/>}/>
-                        <Route path="/contact" element={<Contact/>}/>
-                        <Route path="/calling" element={<Calling/>}/>
-                        <Route path="/chat" element={<Chat prefix='chat'/>}/>
+                        {navLinksData.map(link => (
+                            <Route key={link.path} path={link.path} element={link.component} />
+                        ))}
                     </Routes>
                 </Router>
             </div>
