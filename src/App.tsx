@@ -10,7 +10,7 @@ import Control from "./components/Control";
 import Contact from "./components/Contact";
 import Calling from "./components/Calling";
 import Chat from "./components/Chat";
-import Poll from "./components/Poll";
+import Poll from "./components/Poll/Poll";
 
 let HOSTNAME = "http://127.0.0.1:5000";
 const ENDPOINT = HOSTNAME + "/teacher";
@@ -48,37 +48,41 @@ export default function App() {
         };
     }, []);
 
+    // @formatter:off
     const navLinksData = [
-        { path: "/", name: "Home", component: <MainPage /> },
-        { path: "/seating", name: "Seating", component: <Seating /> },
-        { path: "/control", name: "Control", component: <Control /> },
-        { path: "/contact", name: "Contact", component: <Contact /> },
-        { path: "/calling", name: "Calling", component: <Calling /> },
-        { path: "/chat",    name: "Chat",    component: <Chat prefix='chat' /> },
-        { path: "/poll",    name: "Poll",    component: <Poll /> },
+        {path: "/",        name: "Home",    component: <MainPage/>},
+        {path: "/seating", name: "Seating", component: <Seating />},
+        {path: "/control", name: "Control", component: <Control />},
+        {path: "/contact", name: "Contact", component: <Contact />},
+        {path: "/calling", name: "Calling", component: <Calling />},
+        {path: "/chat",    name: "Chat",    component: <Chat prefix='chat'/>},
+        {path: "/poll",    name: "Poll",    component: <Poll    />},
     ];
+    // @formatter:on
 
     return (
         <SocketContext.Provider value={socketRef.current}>
             <div className="App thin-margin">
                 {error && <div className="error-message">{error}</div>} {/* Optional: Display error messages */}
-                <Router>
-                    {navLinksData.map(link => (
-                        <NavLink
-                            key={link.path}
-                            to={link.path}
-                            className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}
-                        >
-                            {link.name}
-                        </NavLink>
-                    ))}
-
-                    <Routes>
+                <nav>
+                    <Router>
                         {navLinksData.map(link => (
-                            <Route key={link.path} path={link.path} element={link.component} />
+                            <NavLink
+                                key={link.path}
+                                to={link.path}
+                                className={({isActive}) => (isActive ? 'active-link' : 'inactive-link')}
+                            >
+                                {link.name}
+                            </NavLink>
                         ))}
-                    </Routes>
-                </Router>
+
+                        <Routes>
+                            {navLinksData.map(link => (
+                                <Route key={link.path} path={link.path} element={link.component}/>
+                            ))}
+                        </Routes>
+                    </Router>
+                </nav>
             </div>
         </SocketContext.Provider>
     );

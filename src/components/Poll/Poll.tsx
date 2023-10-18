@@ -2,7 +2,9 @@ import React from "react";
 
 export default function Poll() {
     return (
-        <div>
+        <div id='poll'>
+            <h1>Poll</h1>
+
             <div className="form-group row">
                 <h5>Question</h5>
                 <textarea className="form-control" id="question-text" rows={2}
