@@ -1,5 +1,3 @@
-import StatusTags from "./StatusTags";
-
 interface Props {
     stationName: string
     x: number
