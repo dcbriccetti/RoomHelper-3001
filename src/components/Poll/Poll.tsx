@@ -13,21 +13,20 @@ const Poll: React.FC = () => {
     }
 
     useEffect(() => {
-        const handleAnswerPoll = (msg: any) => {
-            answerPoll(msg);
-        };
+        const handleAnswerPoll = (msg: any) => answerPoll(msg);
 
         socket.on('answer_poll', handleAnswerPoll);
 
-        // Cleanup listener when component unmounts
         return () => {
             socket.off('answer_poll', handleAnswerPoll);
         };
-    }, [socket]); // Empty dependency array ensures this effect runs only once, similar to componentDidMount
+    }, [socket]);
 
     const answerPoll = (msg: any) => {
+        console.log("Answer poll:", msg);
         // Your answerPoll logic here...
     };
+
     const handleMultipleQuestionsInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newQuestions = e.target.value
             .split('\n')
@@ -91,7 +90,7 @@ const Poll: React.FC = () => {
 
             <select
                 className='form-select'
-                value={activeQuestionId !== null ? activeQuestionId : ''}
+                value={activeQuestionId || ''}
                 onChange={handleQuestionSelection}>
 
                 <option value="" disabled>Select a question</option>
