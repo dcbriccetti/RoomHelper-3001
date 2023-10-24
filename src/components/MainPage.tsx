@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {StationModel} from "../StationModel";
 import Room from "./Room";
 import {useSettings} from "../App";
+import Footer from "./Footer";
 
 type Props = {
     hostName: string
@@ -49,9 +50,7 @@ export function MainPage({hostName}: Props) {
             <div>
                 <h3>RoomHelper 3001</h3>
                 <Room stationModels={stationData}/>
-                <p/>
-                <p style={{fontSize: '70%'}}><a href="https://davebsoft.com">Dave Briccetti Software LLC</a></p>
-                <br/>
+                <Footer/>
             </div>
         </div>
     );
