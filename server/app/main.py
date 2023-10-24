@@ -4,7 +4,7 @@ from time import time, strftime
 from urllib.parse import urlparse
 from html import escape
 
-from flask import Flask, render_template, request, json, Response
+from flask import Flask, render_template, request, json
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 from markdown import markdown
@@ -35,42 +35,6 @@ def index():
     seat_index = persister.seat_indexes_by_ip.get(r.remote_addr, -1)
     logger.info(f'Student page requested from {r.remote_addr} (last seat index: {seat_index})')
     return render_template('student.html', settings=json.dumps(settings), names=names, lastSeatIndex=seat_index)
-
-@app.route('/students')
-def students() -> Response:
-    return json.jsonify([
-     'Alex Wilson',
-     'Jennifer Garcia',
-     'Brian Martinez',
-     'Angela Torres',
-     'Chris Adams',
-     'Natalie Bennett',
-     'Mark Cook',
-     'Ella Dawson',
-     'Oscar Ellis',
-     'Diana Franklin',
-     'Patrick Grant',
-     'Stella Hudson',
-     'Vincent Ingram',
-     'Lily Jefferson',
-     'George King',
-     'Isabella Lawrence',
-     'Henry Meyers',
-     'Olivia Norton',
-     'Jacob Ortega',
-     'Sophie Patterson',
-     'Max Quinn',
-     'Lucy Reed',
-     'Ethan Sullivan',
-     'Amelia Turner',
-     'Leo Underwood',
-     'Grace Vaughn',
-     'Liam Watson',
-     'Zoe Xavier',
-     'Charlie Young',
-     'Emma Zimmerman'
-    ]
-    )
 
 @app.route('/settings')
 def teacher():
@@ -317,7 +281,8 @@ def set_status(message: dict) -> any:
 
 
 def broadcast_seated(station, seat_index: int) -> None:
-    emit('seated', {'seatIndex': seat_index, 'station': station}, broadcast=True, namespace=TEACHER_NS)
+    emit('seated', {'seatIndex': seat_index, 'name': station['name'], 'ip': station['ip']},
+         broadcast=True, namespace=TEACHER_NS)
 
 
 def relay_chat(sender_id: int, raw_msg: str) -> None:

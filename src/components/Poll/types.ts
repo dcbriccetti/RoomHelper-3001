@@ -30,7 +30,7 @@ export interface Settings {
     allowedSharesDomains: string[];
     normalColor: [number, number, number];
     warningColor: [number, number, number];
-    columns?: number;  // The '?' means it's an optional property
-    rows?: number;
+    columns: number;
+    rows: number;
     periods?: Period[];
 }

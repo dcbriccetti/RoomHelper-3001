@@ -11,6 +11,7 @@ import Chat from "./components/Chat";
 import Poll from "./components/Poll/Poll";
 import {Settings} from "./components/Poll/types";
 import {MainPage} from "./components/MainPage";
+import {StationModel} from "./StationModel";
 
 let HOSTNAME = "http://127.0.0.1:5000";
 const ENDPOINT = HOSTNAME + "/teacher";
@@ -28,6 +29,8 @@ export function useSettings() {
 
 export default function App() {
     const [settings, setSettings] = useState<Settings | null>(null)
+    const [stationModels, setStationModels] = useState<StationModel[]>([])
+    const stationModelsRef = useRef<StationModel[]>([]);
     const socketRef = useRef<Socket | null>(null);
     const [error, setError] = useState<string | null>(null);
 
@@ -45,6 +48,7 @@ export default function App() {
             console.log('Disconnected from server');
             setError('Disconnected from the server.');
         });
+        s.on('seated', handleSeated);
     }
 
     useEffect(() => {
@@ -56,8 +60,20 @@ export default function App() {
                 return response.json();
             })
             .then((data) => {
+                const s = data as Settings;
                 setSettings(data);
                 console.log("Settings:", data);
+                setStationModels(
+                    Array.from({ length: s.rows * s.columns}).map((_, i) =>
+                    ({
+                        index: i,
+                        row: Math.floor(i / s.columns),
+                        column: i % s.columns,
+                        ip: '',
+                        firstName: '',
+                        lastName: '',
+                    })))
+
             })
             .catch((error) => {
                 console.error(error)
@@ -67,9 +83,32 @@ export default function App() {
         };
     }, []);
 
+    useEffect(() => {
+        stationModelsRef.current = stationModels;
+    }, [stationModels]);
+
+    type SeatedMessage = {
+        seatIndex: number
+        name: string
+        ip: string
+    }
+
+    function handleSeated({seatIndex, name, ip}: SeatedMessage) {
+        console.log("Seated:", seatIndex, name, ip);
+
+        const updatedStationModels = [...stationModelsRef.current];
+        const u = {...updatedStationModels[seatIndex]}
+        const [firstName, lastName] = name.split(', ');
+        u.firstName = firstName;
+        u.lastName = lastName;
+        u.ip = ip;
+        updatedStationModels[seatIndex] = u;
+        setStationModels(updatedStationModels);
+    }
+
     // @formatter:off
     const navLinksData = [
-        {path: "/",        name: "Home",    component: <MainPage hostName={HOSTNAME}/>},
+        {path: "/",        name: "Home",    component: <MainPage stationModels={stationModels}/>},
         {path: "/seating", name: "Seating", component: <Seating />},
         {path: "/control", name: "Control", component: <Control />},
         {path: "/contact", name: "Contact", component: <Contact />},

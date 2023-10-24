@@ -10,7 +10,6 @@ export default function Seating() {
 
     function handleSetNames() {
         const unseatedNames = names.split('\n').filter(name => name.trim() !== '');
-        console.log(socket, unseatedNames)
         socket?.emit('set_names', { names: unseatedNames });
     }
 

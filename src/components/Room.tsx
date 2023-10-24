@@ -1,64 +1,47 @@
+import React, {useEffect, useState} from "react"
 import Station from "./Station"
 import {StationModel} from "../StationModel"
-import React, {useEffect, useState} from "react"
-import {useSocket} from "../App"
+import {useSocket} from "../App";
 
 interface Props {
     stationModels: StationModel[]
+    rows: number
+    columns: number
 }
 
 export default function Room(props: Props) {
+    const socket = useSocket();
+    if (!socket) {
+        throw new Error("Socket is null or undefined");
+    }
 
     function stationName(index: number) {
-        return '' + (index + 1)
+        const row = String.fromCharCode('A'.charCodeAt(0) + Math.floor(index / props.columns))
+        const col = index % props.columns + 1
+        return row + col  // A1, A2, ...
     }
 
-    function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
-        e.preventDefault()
-    }
-
-    function handleDrop(e: React.DragEvent<HTMLDivElement>) {
-        e.preventDefault()
-        const droppedData = JSON.parse(e.dataTransfer.getData('text/plain'));
-        const {stationName, offsetX, offsetY} = droppedData;
-        const index = parseInt(stationName) - 1
-        const rect: DOMRect = e.currentTarget.getBoundingClientRect()
-        // update the specific item in the stationData array
-        const updatedStationModels = [...stationModels]
-        updatedStationModels[index] = {
-            ...updatedStationModels[index],
-            x: e.clientX - rect.left - offsetX,
-            y: e.clientY - rect.top - offsetY,
-        }
-
-        setStationModels(updatedStationModels)
-    }
-
-    const socket = useSocket()
     const [stationModels, setStationModels] = useState(props.stationModels)
     useEffect(() => {
         setStationModels(props.stationModels)
     }, [props.stationModels])
 
+    const stationsStyle = {
+        gridTemplateRows: `repeat(${props.rows}, 1fr)`,
+        gridTemplateColumns: `repeat(${props.columns}, 1fr)`
+    }
+
     return (
-        <div className='stations' onDragOver={handleDragOver} onDrop={handleDrop}>
-            <div>
-                <input id='teacher-view' type="checkbox" defaultChecked/>
-                <label htmlFor="teacher-view">Teacher View</label>
-            </div>
-            <div>
-                {
-                    stationModels.map((sm, i) => {
-                            return <Station
-                                key={i}
-                                x={sm.x} y={sm.y}
-                                stationName={stationName(i)}
-                                ip={sm.ip}
-                                studentFirstName={sm.firstName} studentLastName={sm.lastName}/>
-                        }
-                    )
-                }
-            </div>
+        <div className='stations' style={stationsStyle}>
+            {
+                stationModels.map((sm, i) =>
+                    <Station
+                        key={i}
+                        stationName={stationName(i)}
+                        ip={sm.ip}
+                        studentFirstName={sm.firstName} studentLastName={sm.lastName}/>
+                )
+            }
         </div>
     );
 }
