@@ -11,17 +11,24 @@ import Contact from "./components/Contact";
 import Calling from "./components/Calling";
 import Chat from "./components/Chat";
 import Poll from "./components/Poll/Poll";
+import {Settings} from "./components/Poll/types";
 
 let HOSTNAME = "http://127.0.0.1:5000";
 const ENDPOINT = HOSTNAME + "/teacher";
 
 const SocketContext = React.createContext<Socket | null>(null);
+const SettingsContext = React.createContext<Settings | null>(null);
 
 export function useSocket() {
     return useContext(SocketContext);
 }
 
+export function useSettings() {
+    return useContext(SettingsContext);
+}
+
 export default function App() {
+    const [settings, setSettings] = useState<Settings | null>(null)
     const socketRef = useRef<Socket | null>(null);
     const [error, setError] = useState<string | null>(null);
 
@@ -42,9 +49,22 @@ export default function App() {
     }
 
     useEffect(() => {
+        fetch(HOSTNAME + '/settings')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setSettings(data);
+                console.log("Settings:", data);
+            })
+            .catch((error) => {
+                console.error(error)
+            });
         return () => {
-            // todo find out why this causes undefined socket
-            //   socketRef.current?.disconnect();
+            socketRef.current?.disconnect();
         };
     }, []);
 
@@ -61,35 +81,38 @@ export default function App() {
     // @formatter:on
 
     return (
-        <SocketContext.Provider value={socketRef.current}>
-            <div className="App thin-margin">
-                {error && <div className="error-message">{error}</div>} {/* Optional: Display error messages */}
-                <nav>
-                    <Router>
-                        {navLinksData.map(link => (
-                            <NavLink
-                                key={link.path}
-                                to={link.path}
-                                className={({isActive}) => (isActive ? 'active-link' : 'inactive-link')}
-                            >
-                                {link.name}
-                            </NavLink>
-                        ))}
-
-                        <Routes>
+        <SettingsContext.Provider value={settings}>
+            <SocketContext.Provider value={socketRef.current}>
+                <div className="App thin-margin">
+                    {error && <div className="error-message">{error}</div>} {/* Optional: Display error messages */}
+                    <nav>
+                        <Router>
                             {navLinksData.map(link => (
-                                <Route key={link.path} path={link.path} element={link.component}/>
+                                <NavLink
+                                    key={link.path}
+                                    to={link.path}
+                                    className={({isActive}) => (isActive ? 'active-link' : 'inactive-link')}
+                                >
+                                    {link.name}
+                                </NavLink>
                             ))}
-                        </Routes>
-                    </Router>
-                </nav>
-            </div>
-        </SocketContext.Provider>
+
+                            <Routes>
+                                {navLinksData.map(link => (
+                                    <Route key={link.path} path={link.path} element={link.component}/>
+                                ))}
+                            </Routes>
+                        </Router>
+                    </nav>
+                </div>
+            </SocketContext.Provider>
+        </SettingsContext.Provider>
     );
 }
 
 function MainPage() {
     const [studentNames, setStudentNames] = useState([''])
+    const settings = useSettings();
 
     useEffect(() => {
         fetch(HOSTNAME + '/students')
@@ -106,6 +129,11 @@ function MainPage() {
                 console.error(error)
             });
     }, []);
+
+    if (!settings) {
+        return <div>Loading...</div>;
+    }
+    console.log(`rows: ${settings.rows}, cols: ${settings.columns}`)
 
     const stationData: StationModel[] = studentNames.map((name, i) => {
         const [firstName, lastName] = name.split(' ');

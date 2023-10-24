@@ -72,11 +72,10 @@ def students() -> Response:
     ]
     )
 
-@app.route('/teacher')
+@app.route('/settings')
 def teacher():
-    r = request
-    logger.info(f'Teacher page requested from {r.remote_addr}, {r.user_agent}')
-    return render_template('teacher.html', settings=json.dumps(settings), stationJson=json.dumps(stations))
+    logger.info(f'Settings page requested from {request.remote_addr}, {request.user_agent}')
+    return json.jsonify(settings)
 
 
 @socketio.on_error()
