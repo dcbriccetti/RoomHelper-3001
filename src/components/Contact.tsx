@@ -1,6 +1,12 @@
 import React from "react";
+import {useSocket} from "../App";
 
 export default function Contact() {
+    const socket = useSocket();
+    function handleClick() {
+        socket?.emit('ring_bell');
+    }
+
     return (
         <div id="contact">
             <h1>Contact</h1>
@@ -12,7 +18,7 @@ export default function Contact() {
                 placeholder="Message from the Teacher">
             </textarea>
             <br/>
-            <button id="ring-bell" type="button" className="btn btn-outline-primary btn-sm">Ring Bell</button>
+            <button id="ring-bell" type="button" onClick={handleClick} className="btn btn-outline-primary btn-sm">Ring Bell</button>
         </div>
     )
 }
