@@ -22,7 +22,8 @@ authenticated = True  # todo implement authentication?
 
 persister = Persister()
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='/Users/daveb/devel/RoomHelper3001/server/templates',
+            static_folder='/Users/daveb/devel/RoomHelper3001/server/static')
 CORS(app)
 app.config['SECRET_KEY'] = 'secret!'
 socketio: SocketIO = SocketIO(app, ping_interval=20, cors_allowed_origins="*")  # A bit more frequent than the default of 25, to try to avoid timeouts causing disconnections
@@ -148,7 +149,12 @@ def answer_poll(message: dict[str, str | int]):
         station: station_dict = stations[seat_index]
         student_name = station.get('name')
         log_poll('a', student_name, message['answer'])
-        emit('answer_poll', message, broadcast=True, namespace=TEACHER_NS)
+        answer_poll_teacher_message = {
+            'seatIndex': seat_index,
+            'text': message['answer'],
+            'studentName': student_name
+        }
+        emit('answer_poll', answer_poll_teacher_message, broadcast=True, namespace=TEACHER_NS)
         return OK
 
 

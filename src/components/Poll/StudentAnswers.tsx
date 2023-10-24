@@ -6,11 +6,12 @@ type StudentAnswersProps = {
 
 const StudentAnswers: React.FC<StudentAnswersProps> = ({ answers }) => {
     return (
-        <>
-            <table>
-                <thead>
+        <div style={{ width: 'max-content', marginTop: '5px' }}>
+            <h3>Answers</h3>
+            <table className='table'>
+                <thead className='thead-light'>
                     <tr>
-                        <th>Student Name</th>
+                        <th>Student</th>
                         <th>Answer</th>
                     </tr>
                 </thead>
@@ -18,12 +19,12 @@ const StudentAnswers: React.FC<StudentAnswersProps> = ({ answers }) => {
                     {answers.map((answer, index) => (
                         <tr key={index}>
                             <td>{answer.studentName}</td>
-                            <td>{answer.response}</td>
+                            <td>{answer.text}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-        </>
+        </div>
     );
 };
 

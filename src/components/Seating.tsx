@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { useSocket } from "../App";
 
 export default function Seating() {
-    const [names, setNames] = useState<string>('');  // state for textarea content
+    const [names, setNames] = useState<string>('jones, mary\nsmith, bubba\n');  // state for textarea content
     const socket = useSocket();
 
     function handleSetNames() {

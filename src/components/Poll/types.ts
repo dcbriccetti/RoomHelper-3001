@@ -4,7 +4,7 @@ export type Question = {
 };
 
 export type Answer = {
+    seatIndex: number;
     studentName: string;
-    questionId: number;
-    response: string;
+    text: string;
 };
