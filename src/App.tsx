@@ -3,15 +3,14 @@ import {BrowserRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import socketIOClient, {Socket} from "socket.io-client";
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
-import {StationModel} from "./StationModel";
 import Seating from "./components/Seating";
-import Room from './components/Room';
 import Control from "./components/Control";
 import Contact from "./components/Contact";
 import Calling from "./components/Calling";
 import Chat from "./components/Chat";
 import Poll from "./components/Poll/Poll";
 import {Settings} from "./components/Poll/types";
+import {MainPage} from "./components/MainPage";
 
 let HOSTNAME = "http://127.0.0.1:5000";
 const ENDPOINT = HOSTNAME + "/teacher";
@@ -64,13 +63,13 @@ export default function App() {
                 console.error(error)
             });
         return () => {
-            socketRef.current?.disconnect();
+            // socketRef.current?.disconnect();   // todo find why this closes the socket
         };
     }, []);
 
     // @formatter:off
     const navLinksData = [
-        {path: "/",        name: "Home",    component: <MainPage/>},
+        {path: "/",        name: "Home",    component: <MainPage hostName={HOSTNAME}/>},
         {path: "/seating", name: "Seating", component: <Seating />},
         {path: "/control", name: "Control", component: <Control />},
         {path: "/contact", name: "Contact", component: <Contact />},
@@ -84,7 +83,7 @@ export default function App() {
         <SettingsContext.Provider value={settings}>
             <SocketContext.Provider value={socketRef.current}>
                 <div className="App thin-margin">
-                    {error && <div className="error-message">{error}</div>} {/* Optional: Display error messages */}
+                    {error && <div className="error-message">{error}</div>}
                     <nav>
                         <Router>
                             {navLinksData.map(link => (
@@ -110,52 +109,3 @@ export default function App() {
     );
 }
 
-function MainPage() {
-    const [studentNames, setStudentNames] = useState([''])
-    const settings = useSettings();
-
-    useEffect(() => {
-        fetch(HOSTNAME + '/students')
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setStudentNames(data);
-            })
-            .catch((error) => {
-                console.error(error)
-            });
-    }, []);
-
-    if (!settings) {
-        return <div>Loading...</div>;
-    }
-    console.log(`rows: ${settings.rows}, cols: ${settings.columns}`)
-
-    const stationData: StationModel[] = studentNames.map((name, i) => {
-        const [firstName, lastName] = name.split(' ');
-        return ({
-            index: i,
-            ip: '10.0.0.' + (i + 1),
-            firstName: firstName,
-            lastName: lastName,
-            x: i * 50,
-            y: 24 // todo find better way to position these below the Teacher View checkbox
-        });
-    })
-
-    return (
-        <div>
-            <div>
-                <h3>RoomHelper 3001</h3>
-                <Room stationModels={stationData}/>
-                <p/>
-                <p style={{fontSize: '70%'}}><a href="https://davebsoft.com">Dave Briccetti Software LLC</a></p>
-                <br/>
-            </div>
-        </div>
-    );
-}

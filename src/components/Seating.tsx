@@ -2,12 +2,15 @@ import React, {useState} from 'react';
 import { useSocket } from "../App";
 
 export default function Seating() {
-    const [names, setNames] = useState<string>('jones, mary\nsmith, bubba\n');  // state for textarea content
+    const [names, setNames] = useState<string>('jones, mary\nsmith, bubba\n');  // todo remove default names
     const socket = useSocket();
+    if (!socket) {
+        throw new Error("Socket is null or undefined");
+    }
 
     function handleSetNames() {
         const unseatedNames = names.split('\n').filter(name => name.trim() !== '');
-        console.log(socket?.id, unseatedNames)
+        console.log(socket, unseatedNames)
         socket?.emit('set_names', { names: unseatedNames });
     }
 
