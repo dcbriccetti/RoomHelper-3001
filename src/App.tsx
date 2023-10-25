@@ -62,7 +62,6 @@ export default function App() {
             .then((data) => {
                 const s = data as Settings;
                 setSettings(data);
-                console.log("Settings:", data);
                 setStationModels(
                     Array.from({ length: s.rows * s.columns}).map((_, i) =>
                     ({

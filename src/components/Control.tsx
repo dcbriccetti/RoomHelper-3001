@@ -1,5 +1,5 @@
-import React, { useState, FC } from "react";
-import { useSocket } from "../App";
+import React, {useState, FC, useEffect} from "react";
+import {useSettings, useSocket} from "../App";
 
 interface FeatureControlProps {
     label: string;
@@ -47,9 +47,19 @@ const FeatureControl: FC<FeatureControlProps> = ({ label, isEnabled, setIsEnable
 };
 
 const Control: FC = () => {
+    const settings = useSettings();
+
     const [isChecksEnabled, setChecksEnabled] = useState(false);
     const [isSharesEnabled, setSharesEnabled] = useState(false);
     const [isChatEnabled, setChatEnabled] = useState(false);
+
+    useEffect(() => {
+        if (settings) {
+            setChecksEnabled(settings.checksEnabled);
+            setSharesEnabled(settings.sharesEnabled);
+            setChatEnabled(settings.chatEnabled);
+        }
+    }, [settings]);
 
     return (
         <div id="control">
