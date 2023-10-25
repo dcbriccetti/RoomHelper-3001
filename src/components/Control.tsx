@@ -1,17 +1,17 @@
-import React, {useState, FC, useEffect} from "react";
+import React, {useState, FC, useEffect, ChangeEvent, Dispatch, SetStateAction} from "react";
 import {useSettings, useSocket} from "../App";
 
 interface FeatureControlProps {
     label: string;
     isEnabled: boolean;
-    setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsEnabled: Dispatch<SetStateAction<boolean>>;
     controlName: string;
 }
 
 const FeatureControl: FC<FeatureControlProps> = ({ label, isEnabled, setIsEnabled, controlName }) => {
     const socket = useSocket();
 
-    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
         const checked = event.target.checked;
         setIsEnabled(checked);
 
@@ -19,27 +19,16 @@ const FeatureControl: FC<FeatureControlProps> = ({ label, isEnabled, setIsEnable
         socket?.emit(action, checked);
     };
 
-    const handleClearClick = () => {
-        socket?.emit(`clear_${controlName}`);
-    };
+    const handleClearClick = () => socket?.emit(`clear_${controlName}`);
 
     const inputId = `enable-${controlName}`;
 
     return (
         <div>
-            <input
-                id={inputId}
-                type="checkbox"
-                checked={isEnabled}
-                onChange={handleCheckboxChange}
-            />
+            <input id={inputId} type="checkbox" checked={isEnabled} onChange={handleCheckboxChange}/>
             <label htmlFor={inputId}><span className="control-name">{label}</span></label>
-            <button
-                id={`clear-${inputId}`}
-                type="button"
-                className="btn btn-outline-primary btn-sm"
-                onClick={handleClearClick}
-            >
+            <button id={`clear-${inputId}`} type="button" className="btn btn-outline-primary btn-sm"
+                    onClick={handleClearClick}>
                 Clear
             </button>
         </div>
