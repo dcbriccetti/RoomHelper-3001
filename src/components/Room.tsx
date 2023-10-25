@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react"
 import Station from "./Station"
 import {StationModel} from "../types"
-import {useSocket} from "../App";
 
 interface Props {
     stationModels: StationModel[]
@@ -10,11 +9,6 @@ interface Props {
 }
 
 export default function Room(props: Props) {
-    const socket = useSocket();
-    if (!socket) {
-        throw new Error("Socket is null or undefined");
-    }
-
     function stationName(index: number) {
         const row = String.fromCharCode('A'.charCodeAt(0) + Math.floor(index / props.columns))
         const col = index % props.columns + 1
