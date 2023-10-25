@@ -34,3 +34,16 @@ export interface Settings {
     rows: number;
     periods?: Period[];
 }
+
+export interface StationModel {
+    index: number
+    row: number
+    column: number
+    student?: Student
+}
+
+export interface Student {
+    ip: string
+    firstName: string
+    lastName: string
+}

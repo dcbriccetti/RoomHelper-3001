@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Answer, Question} from "./types";
+import {Answer, Question} from "../../types";
 import StudentAnswers from "./StudentAnswers";
 import {useSocket} from "../../App";
 

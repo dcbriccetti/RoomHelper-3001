@@ -1,4 +1,4 @@
-import {Answer} from "./types";
+import {Answer} from "../../types";
 
 type StudentAnswersProps = {
     answers: Answer[];

@@ -9,9 +9,8 @@ import Contact from "./components/Contact";
 import Calling from "./components/Calling";
 import Chat from "./components/Chat";
 import Poll from "./components/Poll/Poll";
-import {Settings} from "./components/Poll/types";
+import {Settings, StationModel, Student} from "./types";
 import {MainPage} from "./components/MainPage";
-import {StationModel} from "./StationModel";
 
 let HOSTNAME = "http://127.0.0.1:5000";
 const ENDPOINT = HOSTNAME + "/teacher";
@@ -97,9 +96,12 @@ export default function App() {
         const updatedStationModels = [...stationModelsRef.current];
         const u = {...updatedStationModels[seatIndex]}
         const [firstName, lastName] = name.split(', ');
-        u.firstName = firstName;
-        u.lastName = lastName;
-        u.ip = ip;
+        const student: Student = {
+            firstName,
+            lastName,
+            ip,
+        }
+        u.student = student;
         updatedStationModels[seatIndex] = u;
         setStationModels(updatedStationModels);
     }

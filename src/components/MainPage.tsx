@@ -1,4 +1,4 @@
-import {StationModel} from "../StationModel";
+import {StationModel} from "../types";
 import Room from "./Room";
 import {useSettings} from "../App";
 import Footer from "./Footer";

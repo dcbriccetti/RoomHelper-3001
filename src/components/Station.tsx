@@ -1,19 +1,19 @@
-interface Props {
+import {Student} from "../types";
+
+type Props = {
     stationName: string
-    studentFirstName: string
-    studentLastName: string
-    ip: string
+    student?: Student
 }
 
-export default function Station({stationName, studentFirstName, studentLastName, ip}: Props) {
+export default function Station({stationName, student}: Props) {
     return (
         <div className='station'>
             <div className="station-top-line">
                 <span className='station-name left-text'>{stationName}</span>
-                <span className='right-text'>{ip}</span>
+                <span className='right-text'>{student?.ip || ''}</span>
             </div>
-            <div className='station-student-first-name'>{studentFirstName}</div>
-            <div className='station-student-last-name'>{studentLastName}</div>
+            <div className='station-student-first-name'>{student?.firstName || ''}</div>
+            <div className='station-student-last-name'>{student?.lastName || ''}</div>
         </div>
     )
 }

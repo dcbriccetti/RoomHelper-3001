@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react"
 import Station from "./Station"
-import {StationModel} from "../StationModel"
+import {StationModel} from "../types"
 import {useSocket} from "../App";
 
 interface Props {
@@ -35,11 +35,7 @@ export default function Room(props: Props) {
         <div className='stations' style={stationsStyle}>
             {
                 stationModels.map((sm, i) =>
-                    <Station
-                        key={i}
-                        stationName={stationName(i)}
-                        ip={sm.ip}
-                        studentFirstName={sm.firstName} studentLastName={sm.lastName}/>
+                    <Station key={i} stationName={stationName(i)} student={sm.student}/>
                 )
             }
         </div>
