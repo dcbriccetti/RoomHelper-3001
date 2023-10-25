@@ -10,17 +10,15 @@ type Props = {
 export function MainPage({stationModels}: Props) {
     const settings = useSettings();
 
-    if (!settings) {
-        return <div>Loading...</div>;
-    }
-
     return (
-        <div>
+        settings ? (
             <div>
                 <h3>RoomHelper 3001</h3>
                 <Room stationModels={stationModels} rows={settings.rows} columns={settings.columns}/>
                 <Footer/>
             </div>
-        </div>
+        ) : (
+            <div>Loading...</div>
+        )
     );
 }
