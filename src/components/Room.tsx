@@ -3,7 +3,7 @@ import Station from "./Station"
 import {StationModel} from "../types"
 
 interface Props {
-    stationModels: StationModel[]
+    stationModels: StationModel[] | null
     rows: number
     columns: number
 }
@@ -28,7 +28,7 @@ export default function Room(props: Props) {
     return (
         <div className='stations' style={stationsStyle}>
             {
-                stationModels.map((sm, i) =>
+                stationModels?.map((sm, i) =>
                     <Station key={i} stationName={stationName(i)} student={sm.student}/>
                 )
             }

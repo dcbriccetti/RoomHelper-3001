@@ -1,13 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Answer, Question} from "../../types";
 import StudentAnswers from "./StudentAnswers";
-import {useSocket} from "../../App";
+import {useSocket} from "../contexts";
 
 const Poll: React.FC = () => {
     const socket = useSocket();
-    if (!socket) {
-        throw new Error("Socket is null or undefined");
-    }
     const [questions, setQuestions] = useState<Question[]>(['q1', 'q2', 'q3'].map((q, index) => ({
         id: index,
         text: q
@@ -19,10 +16,10 @@ const Poll: React.FC = () => {
     useEffect(() => {
         const handleAnswerPoll = (msg: any) => answerPoll(msg);
 
-        socket.on('answer_poll', handleAnswerPoll);
+        socket?.on('answer_poll', handleAnswerPoll);  // move this, to always be listening for answers
 
         return () => {
-            socket.off('answer_poll', handleAnswerPoll);
+            socket?.off('answer_poll', handleAnswerPoll);
         };
     }, [socket]);
 
@@ -50,7 +47,7 @@ const Poll: React.FC = () => {
 
     const handleSendQuestion = () => {
         if (activeQuestionId !== null) {
-            socket.emit('start_poll', 'text', questions[activeQuestionId].text, []);
+            socket?.emit('start_poll', 'text', questions[activeQuestionId].text, []);
             console.log("Question sent:", activeQuestionId, questions[activeQuestionId])
         } else {
             console.log("No question selected.");
@@ -84,7 +81,7 @@ const Poll: React.FC = () => {
         const checked = event.target.checked;
         setShowAnswers(checked);
         if (! checked)
-            socket.emit('stop_poll');
+            socket?.emit('stop_poll');
     };
 
     return (

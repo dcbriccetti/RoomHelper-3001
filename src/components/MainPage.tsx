@@ -1,10 +1,10 @@
 import {StationModel} from "../types";
 import Room from "./Room";
-import {useSettings} from "../App";
+import {useSettings} from "./contexts";
 import Footer from "./Footer";
 
 type Props = {
-    stationModels: StationModel[]
+    stationModels: StationModel[] | null
 }
 
 export function MainPage({stationModels}: Props) {

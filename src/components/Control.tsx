@@ -1,5 +1,5 @@
 import React, {useState, FC, useEffect, ChangeEvent, Dispatch, SetStateAction} from "react";
-import {useSettings, useSocket} from "../App";
+import {useSettings, useSocket} from "./contexts";
 
 interface FeatureControlProps {
     label: string;

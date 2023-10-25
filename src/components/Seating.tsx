@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { useSocket } from "../App";
+import { useSocket } from "./contexts";
 
 export default function Seating() {
     const [names, setNames] = useState<string>('jones, mary\nsmith, bubba\n');  // todo remove default names

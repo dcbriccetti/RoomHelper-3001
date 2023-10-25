@@ -1,3 +1,5 @@
+import React from "react";
+
 export type Question = {
     id: number;
     text: string;
@@ -47,3 +49,22 @@ export interface Student {
     firstName: string
     lastName: string
 }
+
+export type StatusSetMessage = {
+    seatIndex: number
+    key: string
+    value: string
+}
+
+export type SeatedMessage = {
+    seatIndex: number
+    name: string
+    ip: string
+}
+
+export type UseFetchSettingsReturnType = {
+    settings: Settings | null;
+    stationModels: StationModel[] | null;
+    setStationModels: React.Dispatch<React.SetStateAction<StationModel[] | null>>
+    error: string | null;
+};

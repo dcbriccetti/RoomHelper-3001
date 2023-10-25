@@ -1,5 +1,5 @@
 import React from "react";
-import {useSocket} from "../App";
+import {useSocket} from "./contexts";
 
 export default function Contact() {
     const socket = useSocket();
