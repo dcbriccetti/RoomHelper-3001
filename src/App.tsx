@@ -73,8 +73,6 @@ export default function App() {
                         firstName: '',
                         lastName: '',
                     })))
-                socketRef.current?.emit('enable_chat', true);
-
             })
             .catch((error) => {
                 console.error(error)

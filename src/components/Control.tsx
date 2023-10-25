@@ -1,75 +1,83 @@
-import React, {useState} from "react";
-import {useSocket} from "../App";
+import React, { useState, FC } from "react";
+import { useSocket } from "../App";
 
-export default function Control() {
+interface FeatureControlProps {
+    label: string;
+    isEnabled: boolean;
+    setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+    controlName: string;
+}
+
+const FeatureControl: FC<FeatureControlProps> = ({ label, isEnabled, setIsEnabled, controlName }) => {
+    const socket = useSocket();
+
+    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const checked = event.target.checked;
+        setIsEnabled(checked);
+
+        const action = `enable_${controlName}`;
+        socket?.emit(action, checked);
+    };
+
+    const handleClearClick = () => {
+        socket?.emit(`clear_${controlName}`);
+    };
+
+    const inputId = `enable-${controlName}`;
+
+    return (
+        <div>
+            <input
+                id={inputId}
+                type="checkbox"
+                checked={isEnabled}
+                onChange={handleCheckboxChange}
+            />
+            <label htmlFor={inputId}><span className="control-name">{label}</span></label>
+            <button
+                id={`clear-${inputId}`}
+                type="button"
+                className="btn btn-outline-primary btn-sm"
+                onClick={handleClearClick}
+            >
+                Clear
+            </button>
+        </div>
+    );
+};
+
+const Control: FC = () => {
     const [isChecksEnabled, setChecksEnabled] = useState(false);
     const [isSharesEnabled, setSharesEnabled] = useState(false);
     const [isChatEnabled, setChatEnabled] = useState(false);
-    const socket = useSocket();
 
     return (
         <div id="control">
             <h1>Control</h1>
             <p>Enable/disable the following features:</p>
 
-            <div>
-                <input
-                    id='enable-checks'
-                    type="checkbox"
-                    checked={isChecksEnabled}
-                    onChange={() => setChecksEnabled(prev => !prev)}
-                />
-                <label htmlFor="enable-checks"><span className="control-name">Statuses</span></label>
-                <button
-                    id="clear-checks"
-                    type="button"
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={() => {
-                        console.log('clearing checks.', socket?.id);
-                        socket?.emit('clear_checks');
-                        console.log('cleared checks.');
-                    }}
-                >
-                    Clear
-                </button>
-            </div>
+            <FeatureControl
+                label="Statuses"
+                isEnabled={isChecksEnabled}
+                setIsEnabled={setChecksEnabled}
+                controlName="checks"
+            />
 
-            <div>
-                <input
-                    id='enable-shares'
-                    type="checkbox"
-                    checked={isSharesEnabled}
-                    onChange={() => setSharesEnabled(prev => !prev)}
-                />
-                <label htmlFor="enable-shares"><span className="control-name">Shares</span></label>
-                <button
-                    id="clear-shares"
-                    type="button"
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={() => socket?.emit('clear_shares')}
-                >
-                    Clear
-                </button>
-            </div>
+            <FeatureControl
+                label="Shares"
+                isEnabled={isSharesEnabled}
+                setIsEnabled={setSharesEnabled}
+                controlName="shares"
+            />
 
-            <div>
-                <input
-                    id='enable-chat'
-                    type="checkbox"
-                    checked={isChatEnabled}
-                    onChange={() => setChatEnabled(prev => !prev)}
-                />
-                <label htmlFor="enable-chat"><span className="control-name">Chat</span></label>
-                <button
-                    id="clear-chat"
-                    type="button"
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={() => socket?.emit('clear_chat')}
-                >
-                    Clear
-                </button>
-            </div>
-
+            <FeatureControl
+                label="Chat"
+                isEnabled={isChatEnabled}
+                setIsEnabled={setChatEnabled}
+                controlName="chat"
+            />
         </div>
     );
-}
+};
+
+export default Control;
