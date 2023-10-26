@@ -4,7 +4,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import {StationModel} from "./types";
 import Navigation from "./components/Navigation";
-import {SettingsContext, SocketContext} from './components/contexts';
+import Footer from "./components/Footer";
+import {SettingsContext, SocketContext, StationModelsContext} from './components/contexts';
 import useFetchSettings from "./useFetchSettings";
 import useSocketDispatcher from "./useSocketDispatcher";
 
@@ -13,10 +14,15 @@ export default function App() {
     const stationModelsRef = useRef<StationModel[]>([]);
     const socketRef = useRef<Socket | null>(null);
     const [errorDisplay, setErrorDisplay] = useState<string | null>(null);
-    const {settings, stationModels, setStationModels, error} = useFetchSettings();
-    if (error) setErrorDisplay(error);
+    const {settings, stationModels, setStationModels, error: fetchError} = useFetchSettings();
 
     useSocketDispatcher(socketRef, setErrorDisplay, setStationModels, stationModelsRef);
+
+    useEffect(() => {
+        if (fetchError) {
+            setErrorDisplay(fetchError);
+        }
+    }, [fetchError]);
 
     useEffect(() => {
         if (stationModels)
@@ -26,11 +32,15 @@ export default function App() {
     return (
         <SettingsContext.Provider value={settings}>
             <SocketContext.Provider value={socketRef.current}>
-                <div className="App thin-margin">
-                    {errorDisplay && <div className="error-message">{errorDisplay}</div>}
-                    <Navigation stationModels={stationModels} selectedSeatIndex={selectedSeatIndex}
-                                setSelectedSeatIndex={setSelectedSeatIndex}/>
-                </div>
+                <StationModelsContext.Provider value={{ stationModels, setStationModels }}>
+                    <div className="App thin-margin">
+                        <h2>RoomHelper 3001</h2>
+                        {errorDisplay && <div className="error-message">{errorDisplay}</div>}
+                        <Navigation selectedSeatIndex={selectedSeatIndex}
+                                    setSelectedSeatIndex={setSelectedSeatIndex}/>
+                        <Footer/>
+                    </div>
+                </StationModelsContext.Provider>
             </SocketContext.Provider>
         </SettingsContext.Provider>
     );

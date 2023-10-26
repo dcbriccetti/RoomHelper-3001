@@ -1,21 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useSocket} from "./contexts";
 
-interface MessengerProps {
-    prefix: string;
-}
-
-const Chat: React.FC<MessengerProps> = ({ prefix }) => {
+export default function Chat() {
     const [entryValue, setEntryValue] = useState('');
     const contentsRef = useRef<HTMLDivElement>(null);
     const socket = useSocket();
-    if (!socket) {
-        throw new Error("Socket is null or undefined");
-    }
-
     useEffect(() => {
-        const messageMessage = prefix + '_msg';
-        const clearMessage = 'clear_' + prefix;
+        const messageMessage = 'chat_msg';
+        const clearMessage = 'clear_chat';
 
         const handleMessage = (msg: string) => {
             contentsRef.current?.insertAdjacentHTML('afterbegin', msg);
@@ -27,20 +19,20 @@ const Chat: React.FC<MessengerProps> = ({ prefix }) => {
             }
         };
 
-        socket.on(messageMessage, handleMessage);
-        socket.on(clearMessage, handleClear);
+        socket?.on(messageMessage, handleMessage);
+        socket?.on(clearMessage, handleClear);
 
         return () => {
-            socket.off(messageMessage, handleMessage);
-            socket.off(clearMessage, handleClear);
+            socket?.off(messageMessage, handleMessage);
+            socket?.off(clearMessage, handleClear);
         };
-    }, [socket, prefix]);
+    }, [socket]);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         const msgLen = entryValue.length;
         if (e.key === 'Enter' && msgLen > 0 && msgLen < 150 /* todo from settings */) {
             const teacherId = -1
-            socket?.emit(prefix + '_msg', teacherId /* todo handle student indexes */, entryValue);
+            socket?.emit("chat_msg", teacherId /* todo handle student indexes */, entryValue);
             setEntryValue('');
             // Implement chat delay logic if needed
             e.preventDefault(); // Prevent any default behavior associated with the Enter key
@@ -48,25 +40,20 @@ const Chat: React.FC<MessengerProps> = ({ prefix }) => {
     };
 
     return (
-        <div id={prefix} style={{ display: prefix === "chat" ? "block" : "none" }}>
-            <h1>{prefix.charAt(0).toUpperCase() + prefix.slice(1)}</h1>
+        <div id='chat'>
+            <input
+                id={`chat-msg`}
+                autoFocus={true}
+                type="text"
+                placeholder="Enter message"
+                className="col-12"
+                value={entryValue}
+                onChange={(e) => setEntryValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+            />
             <div>
-                <input
-                    id={`${prefix}-msg`}
-                    autoFocus={true}
-                    type="text"
-                    placeholder="Enter message"
-                    className="col-12"
-                    value={entryValue}
-                    onChange={(e) => setEntryValue(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                />
-            </div>
-            <div>
-                <div id={`${prefix}-log`} className="col-12" ref={contentsRef}></div>
+                <div id={`chat-log`} className="col-12" ref={contentsRef}></div>
             </div>
         </div>
     );
 };
-
-export default Chat;

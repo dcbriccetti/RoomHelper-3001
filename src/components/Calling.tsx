@@ -11,24 +11,21 @@ export default function Calling({selectedSeatIndex, setSelectedSeatIndex}: Props
     const [numCalls, setNumCalls] = useState(2);
 
     function handleRandomSetClick() {
-        console.log("Random set clicked", numCalls);
         socket?.emit('random_set', numCalls);
     }
 
     function handleChooseClick(anyone: boolean) {
-        console.log("Choose clicked", anyone);
-        socket?.emit('random_call', anyone, (i: number) => {
-            setSelectedSeatIndex(i === -1 ? null : i);
-        });
+        const NO_ONE_SELECTED = -1;
+        socket?.emit('random_call', anyone, (selected_index: number) =>
+            setSelectedSeatIndex(selected_index === NO_ONE_SELECTED ? null : selected_index));
     }
 
     function handleClearClick() {
-        console.log("Clear clicked");
+        setSelectedSeatIndex(null);
     }
 
     return (
         <div id="calling">
-            <h1>Calling</h1>
             <div style={{marginBottom: '4px'}}>
                 <label htmlFor="random-set-number">Number of times each may be called: </label>
                 <input type="number" defaultValue={numCalls}
@@ -44,7 +41,7 @@ export default function Calling({selectedSeatIndex, setSelectedSeatIndex}: Props
                     id="choose-with-answer">Call Someone with Answer</button>
             <button onClick={handleClearClick} className="btn btn-secondary"
                     id="choose-reset">Reset</button>
-            Hello {selectedSeatIndex}
+            {selectedSeatIndex !== null && <div>Selected {selectedSeatIndex}</div>}
         </div>
     )
 }

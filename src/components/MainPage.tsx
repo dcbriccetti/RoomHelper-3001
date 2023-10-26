@@ -1,24 +1,13 @@
-import {StationModel} from "../types";
 import Room from "./Room";
-import {useSettings} from "./contexts";
-import Footer from "./Footer";
+import {StationModelsContext, useSettings} from "./contexts";
+import {useContext} from "react";
 
-type Props = {
-    stationModels: StationModel[] | null
-}
-
-export function MainPage({stationModels}: Props) {
+export function MainPage() {
     const settings = useSettings();
+    const { stationModels } = useContext(StationModelsContext);
 
     return (
-        settings ? (
-            <div>
-                <h3>RoomHelper 3001</h3>
-                <Room stationModels={stationModels} rows={settings.rows} columns={settings.columns}/>
-                <Footer/>
-            </div>
-        ) : (
-            <div>Loading...</div>
-        )
+        settings &&
+        <Room stationModels={stationModels} rows={settings.rows} columns={settings.columns}/>
     );
 }

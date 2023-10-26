@@ -52,7 +52,6 @@ const Control: FC = () => {
 
     return (
         <div id="control">
-            <h1>Control</h1>
             <p>Enable/disable the following features:</p>
 
             <FeatureControl

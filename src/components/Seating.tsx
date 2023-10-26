@@ -4,9 +4,6 @@ import { useSocket } from "./contexts";
 export default function Seating() {
     const [names, setNames] = useState<string>('jones, mary\nsmith, bubba\n');  // todo remove default names
     const socket = useSocket();
-    if (!socket) {
-        throw new Error("Socket is null or undefined");
-    }
 
     function handleSetNames() {
         const unseatedNames = names.split('\n').filter(name => name.trim() !== '');
@@ -15,7 +12,6 @@ export default function Seating() {
 
     return (
         <div>
-            <h1>Seating</h1>
             <p>Enter student names below, one per line.</p>
             <textarea
                 id="names"

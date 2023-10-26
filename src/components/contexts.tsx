@@ -1,9 +1,19 @@
 import React, {useContext} from "react";
 import {Socket} from "socket.io-client";
-import {Settings} from "../types";
+import {Settings, StationModel} from "../types";
 
 export const SocketContext = React.createContext<Socket | null>(null);
 export const SettingsContext = React.createContext<Settings | null>(null);
+
+type StationModelsContextType = {
+  stationModels: StationModel[] | null;
+  setStationModels: React.Dispatch<React.SetStateAction<StationModel[] | null>>;
+};
+
+export const StationModelsContext = React.createContext<StationModelsContextType>({
+  stationModels: null,
+  setStationModels: () => {}
+});
 
 export function useSocket() {
     return useContext(SocketContext);

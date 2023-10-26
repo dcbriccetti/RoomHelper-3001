@@ -86,7 +86,6 @@ const Poll: React.FC = () => {
 
     return (
         <div id='poll'>
-            <h1>Poll</h1>
             <textarea onChange={handleMultipleQuestionsInput}
                       placeholder="Paste questions here, one per line"></textarea><br/>
 
