@@ -25,10 +25,12 @@ const Poll: React.FC = () => {
     }, [socket]);
 
     const answerPoll = (answer: Answer) => {
-        console.log("Answer poll:", answer);
-        const updatedAnswers = [...answers];
-        updatedAnswers[answer.seatIndex] = answer;
-        setAnswers(updatedAnswers);
+        console.log("Answer poll:", answers, answer);
+        setAnswers(prevAnswers => {
+            const updatedAnswers = [...prevAnswers];
+            updatedAnswers[answer.seatIndex] = answer;
+            return updatedAnswers;
+        });
     };
 
     const handleMultipleQuestionsInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -46,10 +48,11 @@ const Poll: React.FC = () => {
         setActiveQuestionId(Number(e.target.value));
     };
 
-    const handleSendQuestion = () => {
-        if (activeQuestionId !== null) {
-            socket?.emit('start_poll', 'text', questions[activeQuestionId].text, []);
-            console.log("Question sent:", activeQuestionId, questions[activeQuestionId])
+    const handleSendQuestion = (questionId: number | null) => {
+        console.log("Sending question:", questionId);
+        if (questionId !== null) {
+            socket?.emit('start_poll', 'text', questions[questionId].text, []);
+            console.log("Question sent:", questionId, questions[questionId])
         } else {
             console.log("No question selected.");
         }
@@ -65,9 +68,7 @@ const Poll: React.FC = () => {
             const nextQuestionId = questions[currentIndex + 1].id;
             console.log("Setting next question ID:", nextQuestionId);
             setActiveQuestionId(nextQuestionId);
-
-            // Send the next question using the local variable
-            console.log("Question sent:", nextQuestionId, questions[nextQuestionId])
+            handleSendQuestion(nextQuestionId)
         } else {
             console.log("No more questions available.");
         }
@@ -81,7 +82,7 @@ const Poll: React.FC = () => {
     const handleShowAnswersCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const checked = event.target.checked;
         setShowAnswers(checked);
-        if (! checked)
+        if (!checked)
             socket?.emit('stop_poll');
     };
 
@@ -100,7 +101,7 @@ const Poll: React.FC = () => {
                 {questions.map(q => <option key={q.id} value={q.id}>{q.text}</option>)}
             </select>
 
-            <button className="btn btn-primary" onClick={handleSendQuestion}>Send Question</button>
+            <button className="btn btn-primary" onClick={() => handleSendQuestion(activeQuestionId)}>Send Question</button>
             <br/>
 
             <label>
@@ -109,13 +110,11 @@ const Poll: React.FC = () => {
             </label>
             <br/>
 
-            {showAnswers && (
-                <>
-                    <StudentAnswers answers={answers}/>
-                    {hasNextQuestion() &&
-                        <button className="btn btn-primary" onClick={handleSendNext}>Send Next</button>}
-                </>
-            )}
+            <StudentAnswers answers={answers} showAnswers={showAnswers}/>
+            {hasNextQuestion() &&
+                <button className="btn btn-primary" onClick={handleSendNext}>Send Next</button>}
+            <button className="btn btn-secondary" style={{marginLeft: '0.5em'}}
+                    onClick={() => socket?.emit('stop_poll')}>Stop</button>
         </div>
     );
 };
