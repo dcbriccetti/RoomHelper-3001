@@ -1,5 +1,7 @@
-import React, {Dispatch, SetStateAction, useState} from "react";
-import {useSocket} from "./contexts";
+import React, {Dispatch, SetStateAction, useContext, useState} from "react";
+import {StationModelsContext, useSocket} from "./contexts";
+import {Student} from "../types";
+import Room from "./Room";
 
 type Props = {
     selectedSeatIndex: number | null;
@@ -9,6 +11,7 @@ type Props = {
 export default function Calling({selectedSeatIndex, setSelectedSeatIndex}: Props) {
     const socket = useSocket()
     const [numCalls, setNumCalls] = useState(2);
+    const { stationModels } = useContext(StationModelsContext);
 
     function handleRandomSetClick() {
         socket?.emit('random_set', numCalls);
@@ -24,8 +27,12 @@ export default function Calling({selectedSeatIndex, setSelectedSeatIndex}: Props
         setSelectedSeatIndex(null);
     }
 
+    const selectedStudent: Student | null = (selectedSeatIndex !== null && stationModels) ?
+        stationModels[selectedSeatIndex].student || null : null;
+
     return (
         <div id="calling">
+            <Room/>
             <div style={{marginBottom: '4px'}}>
                 <label htmlFor="random-set-number">Number of times each may be called: </label>
                 <input type="number" defaultValue={numCalls}
@@ -41,7 +48,8 @@ export default function Calling({selectedSeatIndex, setSelectedSeatIndex}: Props
                     id="choose-with-answer">Call Someone with Answer</button>
             <button onClick={handleClearClick} className="btn btn-secondary"
                     id="choose-reset">Reset</button>
-            {selectedSeatIndex !== null && <div>Selected {selectedSeatIndex}</div>}
+            {selectedStudent ?
+                <div>Selected {`${selectedStudent.firstName} ${selectedStudent.lastName}`}</div> : <span/>}
         </div>
     )
 }

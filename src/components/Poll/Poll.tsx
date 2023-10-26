@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Answer, Question} from "../../types";
 import StudentAnswers from "./StudentAnswers";
 import {useSocket} from "../contexts";
+import Room from "../Room";
 
 const Poll: React.FC = () => {
     const socket = useSocket();
@@ -86,6 +87,7 @@ const Poll: React.FC = () => {
 
     return (
         <div id='poll'>
+            <Room/>
             <textarea onChange={handleMultipleQuestionsInput}
                       placeholder="Paste questions here, one per line"></textarea><br/>
 

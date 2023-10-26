@@ -19,7 +19,7 @@ export default function useSocketDispatcher(
 
             const updatedStationModels = [...stationModelsRef.current];
             const updatedStation = {...updatedStationModels[seatIndex]}
-            const [firstName, lastName] = name.split(', ');
+            const [lastName, firstName] = name.split(', ');
             updatedStation.student = {firstName, lastName, ip};
             updatedStationModels[seatIndex] = updatedStation;
             setStationModels(updatedStationModels);
