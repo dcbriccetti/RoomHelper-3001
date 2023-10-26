@@ -1,17 +1,13 @@
-import React, {Dispatch, SetStateAction, useContext, useState} from "react";
-import {StationModelsContext, useSocket} from "./contexts";
+import React, {useContext, useState} from "react";
+import {SelectedSeatIndexContext, StationModelsContext, useSocket} from "./contexts";
 import {Student} from "../types";
 import Room from "./Room";
 
-type Props = {
-    selectedSeatIndex: number | null;
-    setSelectedSeatIndex: Dispatch<SetStateAction<number | null>>;
-};
-
-export default function Calling({selectedSeatIndex, setSelectedSeatIndex}: Props) {
+export default function Calling() {
     const socket = useSocket()
     const [numCalls, setNumCalls] = useState(2);
     const { stationModels } = useContext(StationModelsContext);
+    const { selectedSeatIndex, setSelectedSeatIndex } = useContext(SelectedSeatIndexContext);
 
     function handleRandomSetClick() {
         socket?.emit('random_set', numCalls);

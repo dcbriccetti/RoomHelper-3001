@@ -6,13 +6,6 @@ export default function Room() {
     const settings = useSettings();
     const {stationModels} = useContext(StationModelsContext);
 
-    function stationName(index: number) {
-        if (!settings) return ''
-        const row = String.fromCharCode('A'.charCodeAt(0) + Math.floor(index / settings.columns))
-        const col = index % settings.columns + 1
-        return row + col  // A1, A2, ...
-    }
-
     return (
         settings && stationModels ?
             <div className='stations' style={{
@@ -21,7 +14,7 @@ export default function Room() {
             }}>
                 {
                     stationModels?.map((sm, i) =>
-                        <Station key={i} stationName={stationName(i)} student={sm.student}/>
+                        <Station key={i} index={i} stationModel={sm}/>
                     )
                 }
             </div> : <div>Settings not loaded</div>

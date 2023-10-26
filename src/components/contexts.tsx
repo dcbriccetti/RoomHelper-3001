@@ -22,3 +22,14 @@ export function useSocket() {
 export function useSettings() {
     return useContext(SettingsContext);
 }
+
+type SelectedSeatIndexContextType = {
+  selectedSeatIndex: number | null;
+  setSelectedSeatIndex: React.Dispatch<React.SetStateAction<number | null>>;
+};
+
+export const SelectedSeatIndexContext = React.createContext<SelectedSeatIndexContextType>({
+  selectedSeatIndex: null,
+  setSelectedSeatIndex: () => {}
+});
+

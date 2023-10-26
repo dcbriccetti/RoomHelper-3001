@@ -8,20 +8,14 @@ import Chat from "./Chat";
 import Poll from "./Poll";
 import Room from "./Room";
 
-type NavigationProps = {
-    selectedSeatIndex: number | null;
-    setSelectedSeatIndex: React.Dispatch<React.SetStateAction<number | null>>;
-};
-
-export default function Navigation(props: NavigationProps) {
+export default function Navigation() {
     // @formatter:off
     const navLinksData = [
         {path: "/",        name: "Home",    component: <Room    />},
         {path: "/seating", name: "Seating", component: <Seating />},
         {path: "/control", name: "Control", component: <Control />},
         {path: "/contact", name: "Contact", component: <Contact />},
-        {path: "/calling", name: "Calling", component: <Calling selectedSeatIndex={props.selectedSeatIndex}
-                                                                setSelectedSeatIndex={props.setSelectedSeatIndex}/>},
+        {path: "/calling", name: "Calling", component: <Calling />},
         {path: "/chat",    name: "Chat",    component: <Chat    />},
         {path: "/poll",    name: "Poll",    component: <Poll    />},
     ];
