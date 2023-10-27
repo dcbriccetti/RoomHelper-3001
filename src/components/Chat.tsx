@@ -1,10 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {useSocket} from "./contexts";
+import {useSettings, useSocket} from "./contexts";
 
 export default function Chat() {
     const [entryValue, setEntryValue] = useState('');
     const contentsRef = useRef<HTMLDivElement>(null);
     const socket = useSocket();
+    const settings = useSettings()
+
     useEffect(() => {
         const messageMessage = 'chat_msg';
         const clearMessage = 'clear_chat';
@@ -30,7 +32,7 @@ export default function Chat() {
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         const msgLen = entryValue.length;
-        if (e.key === 'Enter' && msgLen > 0 && msgLen < 150 /* todo from settings */) {
+        if (settings && e.key === 'Enter' && msgLen > 0 && msgLen <= settings.chatMessageMaxLen) {
             const teacherId = -1
             socket?.emit("chat_msg", teacherId /* todo handle student indexes */, entryValue);
             setEntryValue('');
