@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import {Settings, StationModel, UseFetchSettingsReturnType} from './types';
 
 const HOSTNAME = "http://127.0.0.1:5000";
@@ -10,15 +10,27 @@ function useFetchSettings(): UseFetchSettingsReturnType {
 
     useEffect(() => {
         fetch(HOSTNAME + '/settings')
-            .then((response) => {
+            .then((response: Response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then((data) => {
-                const s = data as Settings;
+                const transformedStatuses = data.statuses.map(
+                    (status: [string, string, string]) => ({
+                        key: status[0],
+                        code: status[1],
+                        text: status[2]
+                    }));
+
+                const s: Settings = {
+                    ...data,
+                    statuses: transformedStatuses
+                } as Settings;
+
                 setSettings(s);
+
                 const models = Array.from({length: s.rows * s.columns}).map((_, i) => ({
                     index: i,
                     row: Math.floor(i / s.columns),
@@ -29,9 +41,7 @@ function useFetchSettings(): UseFetchSettingsReturnType {
                 }));
                 setStationModels(models);
             })
-            .catch((err) => {
-                setError(err.message);
-            });
+            .catch((err) => setError(err.message));
     }, []);
 
     return {settings, stationModels, setStationModels, error};

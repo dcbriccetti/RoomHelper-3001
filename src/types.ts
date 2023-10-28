@@ -11,7 +11,11 @@ export type Answer = {
     text: string;
 };
 
-type Status = [string, string, string];
+export type Status = {
+  key: string;
+  code: string;
+  text: string;
+}
 
 interface Period {
     periodNumber: number;
@@ -49,12 +53,6 @@ export interface Student {
     firstName: string
     lastName: string
     statusValues: boolean[]
-}
-
-export type StatusSetMessage = {
-    seatIndex: number
-    key: string
-    value: string
 }
 
 export type SeatedMessage = {

@@ -1,9 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSettings, useSocket} from "./contexts";
 
 export default function Chat() {
     const [entryValue, setEntryValue] = useState('');
-    const contentsRef = useRef<HTMLDivElement>(null);
+    const [chatMessages, setChatMessages] = useState<string[]>([]);
     const socket = useSocket();
     const settings = useSettings()
 
@@ -12,13 +12,11 @@ export default function Chat() {
         const clearMessage = 'clear_chat';
 
         const handleMessage = (msg: string) => {
-            contentsRef.current?.insertAdjacentHTML('afterbegin', msg);
+            setChatMessages((prevMessages) => [msg, ...prevMessages]);
         };
 
         const handleClear = () => {
-            if (contentsRef.current) {
-                contentsRef.current.innerHTML = '';
-            }
+            setChatMessages([]);
         };
 
         socket?.on(messageMessage, handleMessage);
@@ -36,7 +34,6 @@ export default function Chat() {
             const teacherId = -1
             socket?.emit("chat_msg", teacherId /* todo handle student indexes */, entryValue);
             setEntryValue('');
-            // Implement chat delay logic if needed
             e.preventDefault(); // Prevent any default behavior associated with the Enter key
         }
     };
@@ -53,8 +50,11 @@ export default function Chat() {
                 onChange={(e) => setEntryValue(e.target.value)}
                 onKeyDown={handleKeyDown}
             />
-            <div>
-                <div id={`chat-log`} className="col-12" ref={contentsRef}></div>
+
+            <div id={`chat-log`} className="col-12">
+                {chatMessages.map((msg, index) => (
+                    <div key={index} dangerouslySetInnerHTML={{ __html: msg }}></div>
+                ))}
             </div>
         </div>
     );
