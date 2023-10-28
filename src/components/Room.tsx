@@ -9,8 +9,8 @@ export default function Room() {
     return (
         settings && stationModels ?
             <div className='stations' style={{
-                gridTemplateRows: `repeat(${settings.rows}, 1fr)`,
-                gridTemplateColumns: `repeat(${settings.columns}, 1fr)`
+                gridTemplateRows: `repeat(${settings.rows}, max-content)`,
+                gridTemplateColumns: `repeat(${settings.columns}, max-content)`
             }}>
                 {
                     stationModels?.map((sm, i) =>

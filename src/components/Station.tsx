@@ -36,12 +36,10 @@ export default function Station({index, stationModel}: Props) {
                 <span className='station-name left-text'>{stationName(index)}</span>
                 <span className='right-text'>{stationModel.student?.ip || ''}</span>
             </div>
-            {stationModel.student && <div>
+            {stationModel.student && <div className="station-student">
                 <div className='station-student-first-name'>{stationModel.student.firstName || ''}</div>
                 <div className='station-student-last-name'>{stationModel.student.lastName || ''}</div>
-                <div>
-                    <StatusTags visibilities={stationModel.student.statusValues}/>
-                </div>
+                <StatusTags visibilities={stationModel.student.statusValues}/>
             </div>}
         </div>
     )
