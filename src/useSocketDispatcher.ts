@@ -1,6 +1,6 @@
 import {useEffect} from "react";
 import socketIOClient, {Socket} from "socket.io-client";
-import {SeatedMessage, StationModel, StatusSetMessage} from "./types";
+import {SeatedMessage, StationModel} from "./types";
 
 let HOSTNAME = "http://127.0.0.1:5000";
 const ENDPOINT = HOSTNAME + "/teacher";
@@ -20,13 +20,34 @@ export default function useSocketDispatcher(
             const updatedStationModels = [...stationModelsRef.current];
             const updatedStation = {...updatedStationModels[seatIndex]}
             const [lastName, firstName] = name.split(', ');
-            updatedStation.student = {firstName, lastName, ip};
+            const statusValues = [false, false, false]
+            updatedStation.student = {firstName, lastName, ip, statusValues};
             updatedStationModels[seatIndex] = updatedStation;
             setStationModels(updatedStationModels);
         }
 
-        function handleStatusSet({seatIndex, key, value}: StatusSetMessage) {
+        function handleStatusSet({seatIndex, key, value}: {seatIndex: number, key: string, value: string}) {
             console.log("Status change:", seatIndex, key, value);
+            const updatedStationModels = [...stationModelsRef.current];
+            const updatedStation = {...updatedStationModels[seatIndex]}
+            if (updatedStation.student) {
+                const updatedStudent = {...updatedStation.student}
+
+                let index: number | null = null; // todo support names and emoji from settings
+                if (key === "needHelp") {
+                    index = 0;
+                } else if (key === "haveAnswer") {
+                    index = 1;
+                } else if (key === "done") {
+                    index = 2;
+                }
+
+                if (index !== null) {
+                    updatedStudent.statusValues[index] = value !== null
+                    updatedStationModels[seatIndex] = updatedStation;
+                    setStationModels(updatedStationModels);
+                }
+            }
         }
 
         const s = socketIOClient(ENDPOINT);

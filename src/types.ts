@@ -48,6 +48,7 @@ export interface Student {
     ip: string
     firstName: string
     lastName: string
+    statusValues: boolean[]
 }
 
 export type StatusSetMessage = {

@@ -5,14 +5,12 @@ interface Props {
 }
 
 export default function StatusTags({visibilities}: Props) {
-    const backgroundColors = ['darkred', 'darkgreen', 'darkblue'];
-    const characters = ['?', 'A', 'D'];
+    const characters = ['🙋', '💡', '✅ ']; // todo get from settings
     return (
         <div className='status-tags'>
             {
                 Array.from({length: 3}).map((_, i) => (
-                    <StatusTag key={i} character={characters[i]} backgroundColor={backgroundColors[i]}
-                               isVisible={visibilities[i]}/>
+                    <StatusTag key={i} character={visibilities[i] ? characters[i] : ' '} />
                 ))
             }
         </div>

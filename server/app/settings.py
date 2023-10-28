@@ -13,9 +13,9 @@ settingsTemplate: dict[str, any] = {  # When changing, also change settings.ts
     'checksEnabled': True,
     'shares': [],
     'statuses': [
-        ms('Need Help',   '?'),
-        ms('Have Answer', 'A'),
-        ms('Done',        'D')
+        ms('Need Help',   '🙋'),
+        ms('Have Answer', '💡'),
+        ms('Done',        '✅'),
     ],
     'chatDelayMs': 5000,
     'chatMessageMaxLen': 150,

@@ -1,6 +1,7 @@
 import {StationModel} from "../types";
 import {SelectedSeatIndexContext, useSettings} from "./contexts";
 import {useContext} from "react";
+import StatusTags from "./StatusTags";
 
 type Props = {
     index: number
@@ -35,8 +36,13 @@ export default function Station({index, stationModel}: Props) {
                 <span className='station-name left-text'>{stationName(index)}</span>
                 <span className='right-text'>{stationModel.student?.ip || ''}</span>
             </div>
-            <div className='station-student-first-name'>{stationModel.student?.firstName || ''}</div>
-            <div className='station-student-last-name'>{stationModel.student?.lastName || ''}</div>
+            {stationModel.student && <div>
+                <div className='station-student-first-name'>{stationModel.student.firstName || ''}</div>
+                <div className='station-student-last-name'>{stationModel.student.lastName || ''}</div>
+                <div>
+                    <StatusTags visibilities={stationModel.student.statusValues}/>
+                </div>
+            </div>}
         </div>
     )
 }
