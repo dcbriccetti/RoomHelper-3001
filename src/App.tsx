@@ -5,29 +5,38 @@ import './App.css';
 import {StationModel} from "./types";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
-import {ControlsAndChatContext, SelectedSeatIndexContext, SettingsContext, SocketContext, StationModelsContext} from './components/contexts';
+import {
+    ControlsAndChatContext,
+    SelectedSeatIndexContext,
+    SettingsContext,
+    SocketContext,
+    StationModelsContext
+} from './components/contexts';
 import useFetchSettings from "./useFetchSettings";
 import useSocketDispatcher from "./useSocketDispatcher";
 
 export default function App() {
-    const [selectedSeatIndex, setSelectedSeatIndex] = useState<number | null>(null);
+    // @formatter:off
     const stationModelsRef = useRef<StationModel[]>([]);
-    const socketRef = useRef<Socket | null>(null);
-    const [errorDisplay, setErrorDisplay] = useState<string | null>(null);
+    const socketRef        = useRef<Socket | null>(null);
+
+    const [selectedSeatIndex, setSelectedSeatIndex] = useState<number | null>(null);
+    const [errorDisplay,      setErrorDisplay]      = useState<string | null>(null);
+    const [isChecksEnabled,   setChecksEnabled]     = useState(false);
+    const [isSharesEnabled,   setSharesEnabled]     = useState(false);
+    const [isChatEnabled,     setChatEnabled]       = useState(false);
+    const [chatMessages,      setChatMessages]      = useState<string[]>([]);
+
     const {settings, stationModels, setStationModels, error: fetchError} = useFetchSettings();
 
     useSocketDispatcher(socketRef, setErrorDisplay, setStationModels, stationModelsRef);
+    // @formatter:on
 
     useEffect(() => {
         if (fetchError) {
             setErrorDisplay(fetchError);
         }
     }, [fetchError]);
-
-    const [isChecksEnabled, setChecksEnabled] = useState(false);
-    const [isSharesEnabled, setSharesEnabled] = useState(false);
-    const [isChatEnabled, setChatEnabled] = useState(false);
-    const [chatMessages, setChatMessages] = useState<string[]>([]);
 
     useEffect(() => {
         if (settings) {
