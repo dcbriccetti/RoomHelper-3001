@@ -1,5 +1,5 @@
 import React, {ChangeEvent, Dispatch, FC, SetStateAction, useContext} from "react";
-import {ControlsContext, useSocket} from "./contexts";
+import {ControlsAndChatContext, useSocket} from "./contexts";
 import './Control.css';
 
 interface FeatureControlProps {
@@ -37,7 +37,7 @@ const FeatureControl: FC<FeatureControlProps> = ({ label, isEnabled, setIsEnable
 };
 
 const Control: FC = () => {
-    const {isChecksEnabled, setChecksEnabled, isSharesEnabled, setSharesEnabled, isChatEnabled, setChatEnabled} = useContext(ControlsContext);
+    const {isChecksEnabled, setChecksEnabled, isSharesEnabled, setSharesEnabled, isChatEnabled, setChatEnabled} = useContext(ControlsAndChatContext);
 
     return (
         <div id="control">

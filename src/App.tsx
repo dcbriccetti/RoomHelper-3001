@@ -5,7 +5,7 @@ import './App.css';
 import {StationModel} from "./types";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
-import {ControlsContext, SelectedSeatIndexContext, SettingsContext, SocketContext, StationModelsContext} from './components/contexts';
+import {ControlsAndChatContext, SelectedSeatIndexContext, SettingsContext, SocketContext, StationModelsContext} from './components/contexts';
 import useFetchSettings from "./useFetchSettings";
 import useSocketDispatcher from "./useSocketDispatcher";
 
@@ -27,6 +27,7 @@ export default function App() {
     const [isChecksEnabled, setChecksEnabled] = useState(false);
     const [isSharesEnabled, setSharesEnabled] = useState(false);
     const [isChatEnabled, setChatEnabled] = useState(false);
+    const [chatMessages, setChatMessages] = useState<string[]>([]);
 
     useEffect(() => {
         if (settings) {
@@ -46,10 +47,11 @@ export default function App() {
             <SocketContext.Provider value={socketRef.current}>
                 <StationModelsContext.Provider value={{stationModels, setStationModels}}>
                     <SelectedSeatIndexContext.Provider value={{selectedSeatIndex, setSelectedSeatIndex}}>
-                        <ControlsContext.Provider value={{
+                        <ControlsAndChatContext.Provider value={{
                             isChecksEnabled, setChecksEnabled,
                             isSharesEnabled, setSharesEnabled,
-                            isChatEnabled, setChatEnabled
+                            isChatEnabled, setChatEnabled,
+                            chatMessages, setChatMessages
                         }}>
                             <div className="App thin-margin">
                                 <h2>RoomHelper 3001</h2>
@@ -57,7 +59,7 @@ export default function App() {
                                 <Navigation/>
                                 <Footer/>
                             </div>
-                        </ControlsContext.Provider>
+                        </ControlsAndChatContext.Provider>
                     </SelectedSeatIndexContext.Provider>
                 </StationModelsContext.Provider>
             </SocketContext.Provider>

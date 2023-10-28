@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {useSettings, useSocket} from "./contexts";
+import React, {useContext, useEffect, useState} from 'react';
+import {ControlsAndChatContext, useSettings, useSocket} from "./contexts";
 
 export default function Chat() {
     const [entryValue, setEntryValue] = useState('');
-    const [chatMessages, setChatMessages] = useState<string[]>([]);
     const socket = useSocket();
     const settings = useSettings()
+    const {chatMessages, setChatMessages} = useContext(ControlsAndChatContext)
 
     useEffect(() => {
         const messageMessage = 'chat_msg';
