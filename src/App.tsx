@@ -5,7 +5,7 @@ import './App.css';
 import {StationModel} from "./types";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
-import {SelectedSeatIndexContext, SettingsContext, SocketContext, StationModelsContext} from './components/contexts';
+import {ControlsContext, SelectedSeatIndexContext, SettingsContext, SocketContext, StationModelsContext} from './components/contexts';
 import useFetchSettings from "./useFetchSettings";
 import useSocketDispatcher from "./useSocketDispatcher";
 
@@ -24,6 +24,18 @@ export default function App() {
         }
     }, [fetchError]);
 
+    const [isChecksEnabled, setChecksEnabled] = useState(false);
+    const [isSharesEnabled, setSharesEnabled] = useState(false);
+    const [isChatEnabled, setChatEnabled] = useState(false);
+
+    useEffect(() => {
+        if (settings) {
+            setChecksEnabled(settings.checksEnabled);
+            setSharesEnabled(settings.sharesEnabled);
+            setChatEnabled(settings.chatEnabled);
+        }
+    }, [settings]);
+
     useEffect(() => {
         if (stationModels)
             stationModelsRef.current = stationModels;
@@ -34,12 +46,18 @@ export default function App() {
             <SocketContext.Provider value={socketRef.current}>
                 <StationModelsContext.Provider value={{stationModels, setStationModels}}>
                     <SelectedSeatIndexContext.Provider value={{selectedSeatIndex, setSelectedSeatIndex}}>
-                        <div className="App thin-margin">
-                            <h2>RoomHelper 3001</h2>
-                            {errorDisplay && <div className="error-message">{errorDisplay}</div>}
-                            <Navigation/>
-                            <Footer/>
-                        </div>
+                        <ControlsContext.Provider value={{
+                            isChecksEnabled, setChecksEnabled,
+                            isSharesEnabled, setSharesEnabled,
+                            isChatEnabled, setChatEnabled
+                        }}>
+                            <div className="App thin-margin">
+                                <h2>RoomHelper 3001</h2>
+                                {errorDisplay && <div className="error-message">{errorDisplay}</div>}
+                                <Navigation/>
+                                <Footer/>
+                            </div>
+                        </ControlsContext.Provider>
                     </SelectedSeatIndexContext.Provider>
                 </StationModelsContext.Provider>
             </SocketContext.Provider>
