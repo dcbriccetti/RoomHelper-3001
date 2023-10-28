@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Answer, Question} from "../../types";
+import './Poll.css';
 import StudentAnswers from "./StudentAnswers";
 import {useSocket} from "../contexts";
 import Room from "../Room";

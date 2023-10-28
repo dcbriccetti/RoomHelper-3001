@@ -1,5 +1,6 @@
 import {BrowserRouter as Router, NavLink, Route, Routes} from "react-router-dom";
 import React from "react";
+import './Navigation.css'
 import Seating from "./Seating";
 import Control from "./Control";
 import Contact from "./Contact";

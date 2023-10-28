@@ -1,0 +1,12 @@
+#control input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+#control > div {
+    margin-bottom: 5px;
+}
+
+.control-name {
+    width: 5em;
+    display: inline-block;
+}

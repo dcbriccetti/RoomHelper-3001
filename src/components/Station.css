@@ -1,0 +1,38 @@
+.station {
+    padding: 1px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    width: 100px;
+    height: 100px;
+}
+
+.station-name {
+    font-size: small;
+    font-weight: bold;
+    position: relative;
+}
+
+.station-top-line {
+    top: -5px; /* why is this needed? */
+    font-size: small;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* To ensure both texts are aligned to the top */
+}
+
+.station-student-first-name {
+    font-size: large;
+    font-weight: bold;
+}
+
+.station-student-last-name {
+}
+
+.station-student-first-name, .station-student-last-name {
+    width: 100%;
+    text-align: center;
+}
+
+.left-text, .right-text {
+    margin: 0; /* Removes default margins to make text flush */
+}

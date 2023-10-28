@@ -1,5 +1,6 @@
 import React, {ChangeEvent, Dispatch, FC, SetStateAction, useContext} from "react";
 import {ControlsContext, useSocket} from "./contexts";
+import './Control.css';
 
 interface FeatureControlProps {
     label: string;

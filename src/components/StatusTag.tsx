@@ -1,3 +1,5 @@
+import './StatusTag.css'
+
 interface Props {
     character: string
 }

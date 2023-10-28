@@ -1,0 +1,15 @@
+.active-link {
+    font-weight: bold;
+}
+
+#nav-links {
+    margin-bottom: 10px;
+}
+
+#nav-links a {
+    margin-right: 6px;
+}
+
+.active-link, .inactive-link {
+    text-decoration: none;
+}

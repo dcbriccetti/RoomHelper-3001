@@ -1,6 +1,7 @@
 import {StationModel} from "../types";
 import {SelectedSeatIndexContext, useSettings} from "./contexts";
 import {useContext} from "react";
+import './Station.css'
 import StatusTags from "./StatusTags";
 
 type Props = {

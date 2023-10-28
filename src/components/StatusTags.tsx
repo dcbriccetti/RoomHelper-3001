@@ -1,4 +1,5 @@
 import StatusTag from "./StatusTag";
+import './StatusTags.css'
 
 interface Props {
     visibilities: boolean[]

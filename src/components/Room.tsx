@@ -1,6 +1,7 @@
 import React, {useContext} from "react"
 import Station from "./Station"
 import {StationModelsContext, useSettings} from "./contexts";
+import './Room.css'
 
 export default function Room() {
     const settings = useSettings();
@@ -8,12 +9,12 @@ export default function Room() {
 
     return (
         settings && stationModels ?
-            <div className='stations' style={{
+            <div className='room' style={{
                 gridTemplateRows: `repeat(${settings.rows}, max-content)`,
                 gridTemplateColumns: `repeat(${settings.columns}, max-content)`
             }}>
                 {
-                    stationModels?.map((sm, i) =>
+                    stationModels.map((sm, i) =>
                         <Station key={i} index={i} stationModel={sm}/>
                     )
                 }

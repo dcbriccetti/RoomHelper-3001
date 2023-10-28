@@ -1,6 +1,7 @@
 import React, {useContext, useState} from "react";
 import {SelectedSeatIndexContext, StationModelsContext, useSocket} from "./contexts";
 import {Student} from "../types";
+import './Calling.css';
 import Room from "./Room";
 
 export default function Calling() {
