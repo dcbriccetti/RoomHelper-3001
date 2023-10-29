@@ -1,0 +1,19 @@
+#chat-log p {
+    margin-bottom: 0;
+}
+#shares-log p {
+    margin-bottom: 0;
+}
+
+#contact > * {
+    vertical-align: top;
+}
+
+#seating > * {
+    vertical-align: top;
+    margin-right: 1em;
+}
+
+.tab-content {
+    padding: 1em;
+}
