@@ -1,14 +1,26 @@
 import {Answer} from "../../types";
+import React, {useState} from "react";
 
 type StudentAnswersProps = {
     answers: Answer[];
-    showAnswers: boolean;
 };
 
-const StudentAnswers: React.FC<StudentAnswersProps> = ({ answers, showAnswers }) => {
+const StudentAnswers: React.FC<StudentAnswersProps> = ({ answers }) => {
+    const [showAnswers, setShowAnswers] = useState(false);
+
+    const handleShowAnswersCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const checked = event.target.checked;
+        setShowAnswers(checked);
+    };
+
     return (
-        <div style={{ width: 'max-content', marginTop: '5px' }}>
+        answers.length ? <div style={{ width: 'max-content', marginTop: '5px' }}>
             <h3>Answers</h3>
+            <label>
+                <input type="checkbox" checked={showAnswers} onChange={handleShowAnswersCheckboxChange}/> Show Answers
+            </label>
+            <br/>
+
             <table className='table'>
                 <thead className='thead-light'>
                     <tr>
@@ -25,7 +37,7 @@ const StudentAnswers: React.FC<StudentAnswersProps> = ({ answers, showAnswers })
                     ))}
                 </tbody>
             </table>
-        </div>
+        </div> : null
     );
 };
 
