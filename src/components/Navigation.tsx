@@ -26,6 +26,7 @@ export default function Navigation() {
         <nav>
             <Router>
                 <div id="nav-links">
+                    <span id="nav-app-name">RoomHelper 3001</span>
                     {navLinksData.map(link => (
                         <NavLink
                             key={link.path}

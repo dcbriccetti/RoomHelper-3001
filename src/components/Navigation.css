@@ -1,15 +1,21 @@
-.active-link {
-    font-weight: bold;
-}
-
 #nav-links {
-    margin-bottom: 10px;
+  background-color: #333;
+  display: flex;
+  margin-bottom: 5px;
 }
 
-#nav-links a {
-    margin-right: 6px;
+#nav-links a, #nav-app-name {
+  color: white;
+  text-decoration: none;
+  padding: 0.4em;
 }
 
-.active-link, .inactive-link {
-    text-decoration: none;
+#nav-links .active-link {
+  background-color: #ddd;
+  color: black;
+}
+
+#nav-app-name {
+  font-weight: bold;
+  padding-left: 0.5em;
 }

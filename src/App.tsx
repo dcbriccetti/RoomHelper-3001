@@ -63,7 +63,6 @@ export default function App() {
                             chatMessages, setChatMessages
                         }}>
                             <div className="App thin-margin">
-                                <h2>RoomHelper 3001</h2>
                                 {errorDisplay && <div className="error-message">{errorDisplay}</div>}
                                 <Navigation/>
                                 <Footer/>
