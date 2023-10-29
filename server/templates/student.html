@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <title>RoomHelper 3000—Student</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.min.js"></script>
+    <script src="./static/js/student_bundle.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () =>
+        RoomHelper3000.createStudent({{ settings | safe }}, {{ lastSeatIndex }}));
+    </script>
+    <link rel="stylesheet" href="static/css/main.css">
+</head>
+<body>
+<div class="container" id="container">
+    <h3>RoomHelper 3000<span id="dash" style="display: none"> — </span><span id="student-name"></span></h3>
+    <div>
+        <label for="time-left">Time Left: </label>
+        <progress id="time-left" max="100"></progress>
+        <span id="time-left-text"></span>
+    </div>
+    <div id='name-loc-card' class="card">
+        <div class="card-body">
+            <h4 class="card-title">Name and Location</h4>
+            <form id="seat">
+                <div class="form-group row">
+                    <select class="form-control col-4" id="name-index">
+                        <option value='-1'>Name</option>
+                        {% for name in names %}
+                        <option value='{{ loop.index - 1 }}'>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group row">
+                    <select class="form-control col-2" id="row">
+                        <option value=''>Row</option>
+                    </select>
+                    <select class="form-control col-2" id="column">
+                        <option value=''>Column</option>
+                    </select>
+                </div>
+                <div class="form-group row">
+                    <button type="submit" class="btn btn-primary form-control col-2">Set</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card" id="comm" style="display: none">
+        <div class="card-body">
+            <h4 class="card-title">Communication</h4>
+
+            <div id="teacher-msg" style="display: none">
+                <h5>Instructions from Teacher</h5>
+                <p id="teacher-msg-text"></p>
+            </div>
+
+            <div id="poll" style="display: none">
+                <h5>Question</h5>
+                <p id="question-text"></p>
+                <div id="poll-multi" class='pollType' style="display: none">
+                </div>
+                <div id="poll-scale" class='pollType' style="display: none">
+                    <input type='range' id='scale' min="0" max="10" step="1"> <span id="scale-text"></span>
+                </div>
+                <div id="poll-text" class='pollType' style="display: none">
+                    <label for="text-answer">Your Response (Press Enter to submit, Shift+Enter for new lines):</label>
+                    <textarea class="form-control" id="text-answer"></textarea>
+                    <span id='answer-received' style='display: none'>Answer received</span>
+                </div>
+            </div>
+
+            <div id="status-checks" style="display: none">
+                <h5 style='margin-top: .5em'>Your Status</h5>
+                <span id="statuses"></span>
+            </div>
+            {% include 'shares.html' %}
+            {% include 'chat.html' %}
+        </div>
+    </div>
+    <p style="font-size: 70%"><a href="https://davebsoft.com">Dave Briccetti Software LLC</a></p>
+</div>
+{% include 'bootstrap.html' %}
+</body>
+</html>
