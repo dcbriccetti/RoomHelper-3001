@@ -3,6 +3,7 @@ import {SelectedSeatIndexContext, useSettings} from "./contexts";
 import {SetStateAction, useContext} from "react";
 import './Station.css'
 import StatusTags from "./StatusTags";
+import {Card, CardContent} from "@mui/material";
 
 type Props = {
     index: number
@@ -32,17 +33,19 @@ export default function Station({index, stationModel}: Props) {
     const stationStyle = {backgroundColor: colorString(stationColor)}
 
     return (
-        <div className='station' style={stationStyle}>
-            <div className="station-top-line">
-                <span className='station-name left-text'>{stationName(index)}</span>
-                <span className='right-text'>{stationModel.student?.ip || ''}</span>
-            </div>
-            {stationModel.student && <div className="station-student">
-                <div className='station-student-first-name'>{stationModel.student.firstName || ''}</div>
-                <div className='station-student-last-name'>{stationModel.student.lastName || ''}</div>
-                <StatusTags visibilities={stationModel.student.statusValues}/>
-            </div>}
-        </div>
+        <Card className='station' sx={stationStyle}>
+            <CardContent sx={{padding: 0}}>
+                <div className="station-top-line">
+                    <span className='station-name'>{stationName(index)}</span>
+                    <span>{stationModel.student?.ip || ''}</span>
+                </div>
+                {stationModel.student && <div className="station-student">
+                    <div className='station-student-first-name'>{stationModel.student.firstName || ''}</div>
+                    <div className='station-student-last-name'>{stationModel.student.lastName || ''}</div>
+                    <StatusTags visibilities={stationModel.student.statusValues}/>
+                </div>}
+            </CardContent>
+        </Card>
     )
 }
 

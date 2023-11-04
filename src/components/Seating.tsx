@@ -1,28 +1,31 @@
 import React, {useState} from 'react';
-import { useSocket } from "./contexts";
+import {useSocket} from "./contexts";
+import {Button, Stack, TextField} from "@mui/material";
 
 export default function Seating() {
-    const [names, setNames] = useState<string>('jones, mary\nsmith, bubba\n');  // todo remove default names
+    const [names, setNames] = useState<string>('Jones, Mary\nSmith, Bubba\n');  // todo remove default names
     const socket = useSocket();
 
     function handleSetNames() {
         const unseatedNames = names.split('\n').filter(name => name.trim() !== '');
-        socket?.emit('set_names', { names: unseatedNames });
+        socket?.emit('set_names', {names: unseatedNames});
     }
 
     return (
-        <div>
+        <Stack width="20em" alignContent='left'>
             <p>Enter student names below, one per line.</p>
-            <textarea
+            <TextField
+                sx={{marginBottom: '10px'}}
                 id="names"
-                rows={8}
-                placeholder="Names (Last, First)"
+                label="Names (Last, First)"
+                multiline
+                minRows={8}
                 value={names}
                 onChange={e => setNames(e.target.value)}
-            ></textarea><br/>
-            <button id="set-names" className="btn btn-primary" onClick={handleSetNames}>
+            />
+            <Button id="set-names" variant='contained' sx={{ width: 'fit-content' }} onClick={handleSetNames}>
                 Set
-            </button>
-        </div>
+            </Button>
+        </Stack>
     );
 }

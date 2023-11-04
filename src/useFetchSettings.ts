@@ -35,9 +35,6 @@ function useFetchSettings(): UseFetchSettingsReturnType {
                     index: i,
                     row: Math.floor(i / s.columns),
                     column: i % s.columns,
-                    ip: '',
-                    firstName: '',
-                    lastName: '',
                 }));
                 setStationModels(models);
             })
