@@ -1,4 +1,5 @@
 import React, {ChangeEvent, Dispatch, FC, SetStateAction, useContext} from "react";
+import {Typography} from "@mui/material";
 import {ControlsAndChatContext, useSocket} from "./contexts";
 import './Control.css';
 
@@ -36,12 +37,12 @@ const FeatureControl: FC<FeatureControlProps> = ({ label, isEnabled, setIsEnable
     );
 };
 
-const Control: FC = () => {
+export default function Control() {
     const {isChecksEnabled, setChecksEnabled, isSharesEnabled, setSharesEnabled, isChatEnabled, setChatEnabled} = useContext(ControlsAndChatContext);
 
     return (
         <div id="control">
-            <p>Enable/disable the following features:</p>
+            <Typography>Enable/disable the following features:</Typography>
 
             <FeatureControl
                 label="Statuses"
@@ -66,5 +67,3 @@ const Control: FC = () => {
         </div>
     );
 };
-
-export default Control;
