@@ -1,5 +1,5 @@
 import {useContext, useMemo} from "react";
-import {Card, CardContent, Typography} from "@mui/material";
+import {Box, Card, CardContent, Typography} from "@mui/material";
 import {StationModel, Student} from "../types";
 import {SelectedSeatIndexContext, useSettings} from "./contexts";
 import './Station.css'
@@ -35,14 +35,16 @@ export default function Station({index, stationModel}: Props) {
                 {student &&
                     <div className="station-student">
                         <Typography align='center'
-                                    sx={{fontSize: '1.3rem', fontWeight: 'bold', marginTop: '-7px'}}>
+                                    sx={{fontSize: '1.3rem', fontWeight: 'bold', marginTop: '-5px'}}>
                             {student.firstName}
                         </Typography>
-                        <Typography align='center' sx={{fontSize: '0.9rem', marginTop: '-7px'}}>
+                        <Typography align='center' sx={{fontSize: '0.9rem', marginTop: '-5px'}}>
                             {student.lastName}
                         </Typography>
-                        <ConductIndicator/>
-                        <StatusTags visibilities={student.statusValues}/>
+                        <Box display='flex' alignItems='center' height='100%'>
+                            <ConductIndicator/>
+                            <StatusTags visibilities={student.statusValues}/>
+                        </Box>
                     </div>}
             </CardContent>
         </Card>

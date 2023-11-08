@@ -1,4 +1,5 @@
 import './StatusTag.css'
+import {Typography} from "@mui/material";
 
 interface Props {
     character: string
@@ -6,6 +7,6 @@ interface Props {
 
 export default function StatusTag({character}: Props) {
     return (
-        <span className='status-tag'>{character}</span>
+        <Typography className='status-tag'>{character}</Typography>
     )
 }

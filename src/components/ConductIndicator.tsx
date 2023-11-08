@@ -24,15 +24,15 @@ export default function ConductIndicator() {
 
     return (
         <Box
+            component='span'
             sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '15px',
-                width: '100%',
-                fontSize: '1.1rem',
+                textAlign: 'center',        // Centers horizontally
+                lineHeight: '40px',          // Centers vertically, should match the height
+                height: '40px',              // Height of the Box, for vertical centering to work
+                width: '2em',                // Width of the Box
+                fontSize: '1.3rem',          // Size of the emoji font
                 cursor: 'pointer',
-                userSelect: 'none' // Prevents text selection on double click
+                userSelect: 'none'           // Prevents text selection on double click
             }}
             onClick={handleClick}
         >
