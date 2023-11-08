@@ -1,7 +1,7 @@
 import {useEffect} from "react";
 import socketIOClient, {Socket} from "socket.io-client";
 import {StationModel} from "./types";
-import {handleSeated, handleStatusSet} from "./components/Station";
+import {updateStationModelOnSeated, updateStationModelOnStatusSet} from "./stationUtils";
 
 let HOSTNAME = "http://127.0.0.1:5000";
 const ENDPOINT = HOSTNAME + "/teacher";
@@ -28,8 +28,8 @@ export default function useSocketDispatcher(
             setErrorDisplay('Disconnected from the server.');
         });
 
-        s.on('seated', (data) => handleSeated(data, stationModelsRef.current, setStationModels));
-        s.on('status_set', (data) => handleStatusSet(data, stationModelsRef.current, setStationModels));
+        s.on('seated', (data) => updateStationModelOnSeated(data, stationModelsRef.current, setStationModels));
+        s.on('status_set', (data) => updateStationModelOnStatusSet(data, stationModelsRef.current, setStationModels));
 
         return () => {
             s.disconnect();
