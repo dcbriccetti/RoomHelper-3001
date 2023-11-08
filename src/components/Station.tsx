@@ -5,7 +5,7 @@ import {SelectedSeatIndexContext, useSettings} from "./contexts";
 import './Station.css'
 import StatusTags from "./StatusTags";
 import {colorString, RgbValues, stationName} from "../stationUtils";
-import ConductBar from "./ConductBar";
+import ConductIndicator from "./ConductIndicator";
 
 type Props = {
     index: number
@@ -35,13 +35,13 @@ export default function Station({index, stationModel}: Props) {
                 {student &&
                     <div className="station-student">
                         <Typography align='center'
-                                    sx={{fontSize: '1.3rem', fontWeight: 'bold', marginTop: '-6px'}}>
+                                    sx={{fontSize: '1.3rem', fontWeight: 'bold', marginTop: '-7px'}}>
                             {student.firstName}
                         </Typography>
-                        <Typography align='center' sx={{fontSize: '0.9rem', marginTop: '-6px'}}>
+                        <Typography align='center' sx={{fontSize: '0.9rem', marginTop: '-7px'}}>
                             {student.lastName}
                         </Typography>
-                        <ConductBar/>
+                        <ConductIndicator/>
                         <StatusTags visibilities={student.statusValues}/>
                     </div>}
             </CardContent>
