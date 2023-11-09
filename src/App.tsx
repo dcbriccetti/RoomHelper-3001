@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Socket} from "socket.io-client";
-import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import {StationModel} from "./types";
 import Navigation from "./components/Navigation";
