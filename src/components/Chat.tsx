@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {ControlsAndChatContext, useSettings, useSocket} from "./contexts";
+import {List, ListItem, Paper, TextField} from "@mui/material";
 
 export default function Chat() {
     const [entryValue, setEntryValue] = useState('');
@@ -7,7 +8,7 @@ export default function Chat() {
     const settings = useSettings()
     const {chatMessages, setChatMessages} = useContext(ControlsAndChatContext)
 
-    useEffect(() => {
+    useEffect(() => { // todo receive messages even when Chat component is not mounted
         const messageMessage = 'chat_msg';
         const clearMessage = 'clear_chat';
 
@@ -26,7 +27,7 @@ export default function Chat() {
             socket?.off(messageMessage, handleMessage);
             socket?.off(clearMessage, handleClear);
         };
-    }, [socket]);
+    }, [setChatMessages, socket]);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         const msgLen = entryValue.length;
@@ -40,22 +41,28 @@ export default function Chat() {
 
     return (
         <div id='chat'>
-            <input
-                id={`chat-msg`}
-                autoFocus={true}
+            <TextField
+                id="chat-msg"
+                autoFocus
+                label="Enter message"
                 type="text"
-                placeholder="Enter message"
-                className="col-12"
+                variant="outlined"
                 value={entryValue}
                 onChange={(e) => setEntryValue(e.target.value)}
                 onKeyDown={handleKeyDown}
+                fullWidth
+                margin="normal"
             />
 
-            <div id={`chat-log`} className="col-12">
-                {chatMessages.map((msg, index) => (
-                    <div key={index} dangerouslySetInnerHTML={{ __html: msg }}></div>
-                ))}
-            </div>
+            <Paper id="chat-log" style={{maxHeight: 300, overflow: 'auto'}}>
+                <List>
+                    {chatMessages.map((msg, index) => (
+                        <ListItem key={index} sx={{padding: '2px'}}>
+                            <div dangerouslySetInnerHTML={{ __html: msg }}></div>
+                        </ListItem>
+                    ))}
+                </List>
+            </Paper>
         </div>
     );
 };
