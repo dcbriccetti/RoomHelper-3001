@@ -13,12 +13,16 @@ import {
 } from './components/contexts';
 import useFetchSettings from "./useFetchSettings";
 import useSocketDispatcher from "./useSocketDispatcher";
+import StudentApp from "./student/StudentApp";
+import {Button, Card, Stack, Typography} from "@mui/material";
 
 export default function App() {
     // @formatter:off
     const stationModelsRef = useRef<StationModel[]>([]);
     const socketRef        = useRef<Socket | null>(null);
 
+    enum Role {UNKNOWN, TEACHER, STUDENT}
+    const [role,              setRole]              = useState<Role>(Role.UNKNOWN);
     const [selectedSeatIndex, setSelectedSeatIndex] = useState<number | null>(null);
     const [errorDisplay,      setErrorDisplay]      = useState<string | null>(null);
     const [isChecksEnabled,   setChecksEnabled]     = useState(false);
@@ -63,7 +67,18 @@ export default function App() {
                         }}>
                             <div className="App thin-margin">
                                 {errorDisplay && <div className="error-message">{errorDisplay}</div>}
-                                <Navigation/>
+                                {role === Role.UNKNOWN &&
+                                    <Card>
+                                        <Typography>This is temporarily how to select from the two roles.</Typography>
+                                        <Stack direction="row" spacing={2}>
+                                            <Button variant="contained"
+                                                    onClick={() => setRole(Role.TEACHER)}>Teacher</Button>
+                                            <Button variant="contained"
+                                                    onClick={() => setRole(Role.STUDENT)}>Student</Button>
+                                        </Stack>
+                                    </Card>}
+                                {role === Role.TEACHER && <Navigation/>}
+                                {role === Role.STUDENT && <StudentApp/>}
                                 <Footer/>
                             </div>
                         </ControlsAndChatContext.Provider>

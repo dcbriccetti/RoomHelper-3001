@@ -42,6 +42,11 @@ def teacher():
     return json.jsonify(settings)
 
 
+@app.route('/students')
+def students():
+    return json.jsonify(names)
+
+
 @socketio.on_error()
 def handle_error(e):
     print('An error occurred:', e)
