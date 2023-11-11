@@ -1,9 +1,9 @@
-import {MenuItem, Select, SelectChangeEvent, Typography} from "@mui/material";
+import {Typography} from "@mui/material";
 import {useEffect, useState} from "react";
-import Room from "../components/Room";
 import TeacherMsg from "./components/TeacherMsg";
 import {useSocket} from "../components/contexts";
 import Poll from "./components/Poll";
+import StudentSeat from "./components/StudentSeat";
 
 export default function StudentApp() {
     const HOSTNAME = "http://127.0.0.1:5000";
@@ -39,13 +39,15 @@ export default function StudentApp() {
         fetchNames();
     }, []);
 
-    function handleChange(event: SelectChangeEvent<number>) {
-        const selectedIndex = Number(event.target.value);
-        setStudentIndex(selectedIndex);
-        setName(names[selectedIndex]);
+    function handleNameIndexChange(nameIndex: number) {
+        setStudentIndex(nameIndex);
+        setName(names[nameIndex]);
     }
 
-    const seatingDataCollected = name !== '' && seatIndex !== null;
+    function handleSeatIndexChange(seatIndex: number) {
+        setSeatIndex(seatIndex);
+    }
+
     const socket = useSocket();
 
     useEffect(() => {
@@ -59,46 +61,14 @@ export default function StudentApp() {
         }
     }, [socket]);
 
-    function seatStudent(seatIndex: number) {
-        socket?.emit('seat', {
-            nameIndex: studentIndex,
-            seatIndex: seatIndex
-        }, (response: string) => {
-            if (response === 'OK') {
-                // todo audioContext.resume();
-            } else console.log(response);
-        });
-        setSeatIndex(seatIndex);
-    }
-
     const nameInTitle = name !== '' ? `—${name}` : '';
 
     return (
         <>
             {error && <div>Error loading data: {error}</div>}
             <Typography variant='h4'>RoomHelper 3001{nameInTitle}</Typography>
-            {!seatingDataCollected &&
-                <div>
-                    <div>
-                        <Typography>Student</Typography>
-                        <Select
-                            labelId="student-label"
-                            id="student"
-                            value={names.length > 0 ? studentIndex ?? 0 : ''}
-                            label="Student"
-                            onChange={handleChange}
-                        >
-                            {names.map((studentName, i) => (
-                                <MenuItem key={studentName} value={i}>
-                                    {studentName}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </div>
-                    <Typography>Seat</Typography>
-                    <Room seatStudent={seatStudent}/>
-                </div>
-            }
+            <StudentSeat names={names} studentIndex={studentIndex} setStudentIndex={handleNameIndexChange}
+                         setSeatIndex={handleSeatIndexChange}/>
             <TeacherMsg teacherMsg={teacherMsg}/>
             <Poll/>
         </>
