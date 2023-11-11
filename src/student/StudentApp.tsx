@@ -1,81 +1,97 @@
-import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography} from "@mui/material";
+import {MenuItem, Select, SelectChangeEvent, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import Room from "../components/Room";
 import TeacherMsg from "./components/TeacherMsg";
 import {useSocket} from "../components/contexts";
+import Poll from "./components/Poll";
 
 export default function StudentApp() {
     const HOSTNAME = "http://127.0.0.1:5000";
     const [names, setNames] = useState<string[]>([]);
-    const [name, setName] = useState<string | null>(null);
+    const [name, setName] = useState<string>('');
+    const [studentIndex, setStudentIndex] = useState<number | null>(null);
     const [seatIndex, setSeatIndex] = useState<number | null>(null);
     const [teacherMsg, setTeacherMsg] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchNames() {
-            const response: Response = await fetch(`${HOSTNAME}/students`)
-            const names = await response.json() as string[]
-            setNames(names)
+            const response: Response = await fetch(`${HOSTNAME}/students`);
+            const names = await response.json() as string[];
+            setNames(names);
+            // Set default value for 'name' to the first item in 'names' if available
+            if (names.length > 0) {
+                setName(names[0]);
+            }
         }
 
-        fetchNames()
-    }, [])
+        fetchNames();
+    }, []);
 
     function handleChange(event: SelectChangeEvent<number>) {
-        const index = event.target.value as number;
-        setName(names[index])
+        const selectedIndex = Number(event.target.value);
+        setStudentIndex(selectedIndex);
+        setName(names[selectedIndex]);
     }
 
-    const seatingDataCollected = name !== null && seatIndex !== null
-    const socket = useSocket()
+    const seatingDataCollected = name !== '' && seatIndex !== null;
+    const socket = useSocket();
 
     useEffect(() => {
-        console.log('socket', socket)
+        console.log('socket', socket);
         socket?.on('teacher_msg', msg => {
-            console.log('received teacher_msg', msg)
-          setTeacherMsg(msg.trim());
+            console.log('received teacher_msg', msg);
+            setTeacherMsg(msg.trim());
         });
+        return () => {
+            socket?.off('teacher_msg');
+        }
     }, [socket]);
+
+    function seatStudent(seatIndex: number) {
+        socket?.emit('seat', {
+            nameIndex: studentIndex,
+            seatIndex: seatIndex
+        }, (response: string) => {
+            if (response === 'OK') {
+                // todo audioContext.resume();
+            } else console.log(response);
+        });
+        setSeatIndex(seatIndex);
+    }
+
+    const nameInTitle = name !== '' ? `—${name}` : '';
 
     return (
         <>
-            <Typography variant='h4'>RoomHelper 3001</Typography>
-            {! seatingDataCollected &&
+            <Typography variant='h4'>RoomHelper 3001{nameInTitle}</Typography>
+            {!seatingDataCollected &&
                 <div>
-                    <FormControl fullWidth variant="outlined" margin="normal">
-                        <InputLabel id="student-label">Student</InputLabel>
+                    <div>
+                        <Typography>Student</Typography>
                         <Select
                             labelId="student-label"
                             id="student"
+                            value={names.length > 0 ? studentIndex ?? 0 : ''}
                             label="Student"
                             onChange={handleChange}
                         >
-                            {names.map((studentName, index) => (
-                                <MenuItem key={studentName} value={String(index)}>
+                            {names.map((studentName, i) => (
+                                <MenuItem key={studentName} value={i}>
                                     {studentName}
                                 </MenuItem>
                             ))}
                         </Select>
-                    </FormControl>
-                    <Typography>Where are you sitting?</Typography>
-                    <Room setSeatIndex={setSeatIndex}/>
+                    </div>
+                    <Typography>Seat</Typography>
+                    <Room seatStudent={seatStudent}/>
                 </div>
             }
             <TeacherMsg teacherMsg={teacherMsg}/>
+            <Poll/>
         </>
     )
 }
-
 /*
-
-<div class="card" id="comm" style="display: none">
-    <div class="card-body">
-        <h4 class="card-title">Communication</h4>
-
-        <div id="teacher-msg" style="display: none">
-            <h5>Instructions from Teacher</h5>
-            <p id="teacher-msg-text"></p>
-        </div>
 
         <div id="poll" style="display: none">
             <h5>Question</h5>
