@@ -12,15 +12,27 @@ export default function StudentApp() {
     const [studentIndex, setStudentIndex] = useState<number | null>(null);
     const [seatIndex, setSeatIndex] = useState<number | null>(null);
     const [teacherMsg, setTeacherMsg] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchNames() {
-            const response: Response = await fetch(`${HOSTNAME}/students`);
-            const names = await response.json() as string[];
-            setNames(names);
-            // Set default value for 'name' to the first item in 'names' if available
-            if (names.length > 0) {
-                setName(names[0]);
+            try {
+                const response = await fetch(`${HOSTNAME}/students`);
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                const names = await response.json();
+                setNames(names);
+                if (names.length > 0) {
+                    setName(names[0]);
+                }
+            } catch (error) {
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError('An unknown error occurred');
+                }
+                console.error("Fetching error:", error);
             }
         }
 
@@ -63,6 +75,7 @@ export default function StudentApp() {
 
     return (
         <>
+            {error && <div>Error loading data: {error}</div>}
             <Typography variant='h4'>RoomHelper 3001{nameInTitle}</Typography>
             {!seatingDataCollected &&
                 <div>
